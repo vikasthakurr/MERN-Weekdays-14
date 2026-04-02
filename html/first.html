@@ -1,11 +1,105 @@
-<!DOCTYPE html>
+<!--
+  FILE: first.html
+  PURPOSE: Introduction to HTML boilerplate structure.
+  USE CASE: This is the starting template for any HTML web page. It demonstrates
+            the minimal required structure that every HTML document should have.
+
+  ──────────────────────────────────────────────────────────────────────────
+  HTML HISTORY:
+  ──────────────────────────────────────────────────────────────────────────
+  HTML (HyperText Markup Language) was invented by Tim Berners-Lee in 1991
+  to create and share documents on the World Wide Web. It has since evolved
+  through versions: HTML 2.0 → HTML 3.2 → HTML 4.01 → XHTML → HTML5 (2014).
+  HTML5 is the current standard and adds support for semantic elements,
+  multimedia (audio/video), canvas, and better accessibility.
+
+  ──────────────────────────────────────────────────────────────────────────
+  BOILERPLATE BREAKDOWN:
+  ──────────────────────────────────────────────────────────────────────────
+  The "boilerplate" is the minimal skeleton every HTML file must have.
+  Below is an explanation of each required part:
+-->
+
+<!--
+  <!DOCTYPE html>
+  DEFINITION : A declaration (not a tag) that tells the browser which version
+               of HTML the document is written in.
+  USE CASE   : Always place this at the very top of every HTML file.
+               "html" (lowercase) means we are using HTML5 — the modern standard.
+               Without this, browsers may switch to "quirks mode" and render
+               the page incorrectly.
+-->
+<!doctype html>
+
+<!--
+  <html lang="en">
+  DEFINITION : The root element that wraps all content on the page.
+               Every other element is a child of <html>.
+  ATTRIBUTE  : lang="en" — declares the primary language as English.
+               This helps screen readers pronounce content correctly and
+               assists search engines in language-based indexing.
+  USE CASE   : Required wrapper for all HTML content. Change "en" to another
+               ISO language code (e.g., "hi" for Hindi, "fr" for French)
+               based on the page's primary language.
+-->
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    <head>
+    DEFINITION : A container for metadata — information ABOUT the document
+                 that is NOT directly displayed on the page.
+    USE CASE   : Place character encoding, viewport settings, page title,
+                 CSS links, favicon, and SEO meta tags inside <head>.
+  -->
+  <head>
+
+    <!--
+      <meta charset="UTF-8" />
+      DEFINITION : Specifies the character encoding for the document.
+      WHY UTF-8  : UTF-8 supports virtually all characters and symbols
+                   from all human languages (including Hindi, Arabic, emoji, etc.)
+      USE CASE   : Always set this as the FIRST element inside <head> to ensure
+                   the browser correctly interprets all text, including special
+                   characters like ©, €, ₹, and international letters.
+    -->
+    <meta charset="UTF-8" />
+
+    <!--
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      DEFINITION : Controls how the page is displayed on mobile/tablet devices.
+      ATTRIBUTES :
+        - width=device-width   → sets the page width to match the screen width
+        - initial-scale=1.0    → sets the default zoom level to 100% on load
+      USE CASE   : Essential for responsive web design. Without this, mobile
+                   browsers zoom out the page to fit a desktop-sized layout,
+                   making text very small and hard to read.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      <title>
+      DEFINITION : Sets the name/title of the web page.
+      USE CASE   : Shown in:
+                   - The browser tab
+                   - Browser history
+                   - Search engine results (SEO)
+                   - When a page is bookmarked
+                   Keep it descriptive and relevant to page content.
+    -->
     <title>first page</title>
-</head>
-<body>
+
+  </head>
+
+  <!--
+    <body>
+    DEFINITION : Contains ALL the visible content of the web page —
+                 headings, paragraphs, images, links, forms, etc.
+    USE CASE   : Everything the user sees and interacts with in the browser
+                 window goes inside <body>. Only one <body> tag per document.
+  -->
+  <body>
+    <!-- Page content goes here. Currently contains a placeholder text. -->
     asdfghjkl
-</body>
+  </body>
+
 </html>

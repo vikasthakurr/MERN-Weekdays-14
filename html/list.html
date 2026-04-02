@@ -1,3 +1,11 @@
+<!--
+  FILE: list.html
+  PURPOSE: Demonstrates the three types of HTML lists and common container elements.
+  USE CASE: Reference file for understanding how to display structured, enumerable,
+            and descriptive content using HTML list elements.
+            Lists are widely used in navigation menus, feature lists, FAQs,
+            glossaries, and content outlines.
+-->
 <!doctype html>
 <html lang="en">
   <head>
@@ -6,11 +14,33 @@
     <title>Document</title>
   </head>
   <body>
+
+    <!--
+      ════════════════════════════════════════════════
+      1. UNORDERED LIST  →  <ul>
+      ════════════════════════════════════════════════
+      DEFINITION : Displays a list of items with bullet points (•) by default.
+                   The order of items does NOT matter.
+      CHILD TAG  : <li> (List Item) — wraps each individual item in the list.
+      STYLING    : The bullet style can be changed with CSS:
+                     list-style-type: disc | circle | square | none;
+      USE CASE   : Navigation menus, feature lists, ingredient lists,
+                   any collection where order is irrelevant.
+
+      EXAMPLE:
+        • item-1
+        • item-2
+        • item-3
+    -->
+
+    <!-- Commented-out example kept for reference (original 3-item draft) -->
     <!-- <ul>
       <li>item-1</li>
       <li>item-2</li>
       <li>item-3</li>
     </ul> -->
+
+    <!-- Active unordered list with 10 items -->
     <ul>
       <li>item-1</li>
       <li>item-2</li>
@@ -24,6 +54,30 @@
       <li>item-10</li>
     </ul>
 
+    <!--
+      ════════════════════════════════════════════════
+      2. ORDERED LIST  →  <ol>
+      ════════════════════════════════════════════════
+      DEFINITION : Displays a list of items with sequential numbers or letters.
+                   The order of items MATTERS.
+      ATTRIBUTES :
+        - type    → defines numbering style:
+                    "1" = numbers (default)   e.g. 1, 2, 3
+                    "A" = uppercase letters   e.g. A, B, C
+                    "a" = lowercase letters   e.g. a, b, c
+                    "I" = uppercase Roman     e.g. I, II, III
+                    "i" = lowercase Roman     e.g. i, ii, iii
+        - start   → defines the starting number.
+                    Here start="3" means the list begins counting from 3.
+      USE CASE   : Step-by-step instructions, numbered recipes, ranked lists,
+                   procedures where sequence is important.
+
+      EXAMPLE (type="1" start="3"):
+        3. item-1
+        4. item-2
+        5. item-3
+        ...
+    -->
     <ol type="1" start="3">
       <li>item-1</li>
       <li>item-2</li>
@@ -33,16 +87,64 @@
       <li>item-6</li>
     </ol>
 
+    <!--
+      ════════════════════════════════════════════════
+      3. DESCRIPTION LIST  →  <dl>
+      ════════════════════════════════════════════════
+      DEFINITION : A list of term–definition pairs, similar to a dictionary or glossary.
+      CHILD TAGS :
+        - <dt> (Description Term)       → the word or term being defined
+        - <dd> (Description Definition) → the definition or explanation of the term.
+                                          By default, <dd> is indented under <dt>.
+      USE CASE   : Glossaries, FAQs, metadata displays (e.g. Author: John),
+                   key-value data representations.
+
+      EXAMPLE:
+        vikas        ← <dt>
+          mentor     ← <dd>
+        mern         ← <dt>
+          web dev    ← <dd>
+    -->
     <dl>
-      <dt>vikas</dt>
-      <dd>mentor</dd>
-      <dt>mern</dt>
-      <dd>web dev</dd>
+      <dt>vikas</dt>         <!-- Term: person's name -->
+      <dd>mentor</dd>        <!-- Definition: their role -->
+      <dt>mern</dt>          <!-- Term: technology stack -->
+      <dd>web dev</dd>       <!-- Definition: what it's used for -->
     </dl>
 
-    <div></div>
+    <!--
+      ════════════════════════════════════════════════
+      4. DIV  →  <div>
+      ════════════════════════════════════════════════
+      DEFINITION : A generic BLOCK-level container element with no default styling.
+                   "div" stands for "division" or "divider".
+      BEHAVIOUR  : Takes up the full width of its parent by default and starts
+                   on a new line (block-level).
+      USE CASE   : Grouping and structuring sections of a page, wrapping elements
+                   for CSS styling or JavaScript manipulation. It is used when
+                   no semantic element (like <section>, <article>) fits.
+    -->
+    <div></div> <!-- Empty block container — commonly used as a layout wrapper -->
 
+    <!--
+      ════════════════════════════════════════════════
+      5. SPAN  →  <span>
+      ════════════════════════════════════════════════
+      DEFINITION : A generic INLINE-level container element with no default styling.
+      BEHAVIOUR  : Does NOT start on a new line. Only takes up as much width
+                   as its content — sits inline within surrounding text.
+      USE CASE   : Styling a specific word or phrase within a paragraph,
+                   targeting a portion of text with CSS/JS without breaking flow.
+      KEY DIFF from <div>: <div> is block-level (new line), <span> is inline (same line).
+
+      EXAMPLE BELOW: Both spans appear side-by-side on the same line.
+    -->
+
+    <!-- Commented-out alternative: h1 and span side by side (kept for reference) -->
     <!-- <h1>vikas</h1> <span>vikas2</span> -->
-     <span>vikas</span> <span>vikas 2</span>
+
+    <!-- Active: two inline span elements sitting on the same line -->
+    <span>vikas</span> <span>vikas 2</span>
+
   </body>
 </html>
