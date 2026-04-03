@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+  table.html
+  ----------
+  Purpose: Demonstrates the use of HTML <table> element to display tabular data.
+
+  Key Concepts Covered:
+  - <table>        : The root element that defines an HTML table.
+  - <thead>        : Groups the header content of the table (column titles).
+  - <tbody>        : Groups the body/main content rows of the table.
+  - <tfoot>        : Groups the footer content of the table (e.g., summaries, totals).
+  - <tr>           : Stands for "table row" — defines a row inside the table.
+  - <th>           : Stands for "table header" — defines a header cell (bold & centered by default).
+  - <td>           : Stands for "table data" — defines a standard data cell.
+  - border="1"     : HTML attribute that adds a visible border around table cells (use CSS in practice).
+
+  Table Structure:
+  ┌──────────┬─────┬────────┐
+  │  Name    │ Age │  City  │   ← <thead> with <th> header cells
+  ├──────────┼─────┼────────┤
+  │  Vikas   │ 25  │  Agra  │   ← <tbody> rows with <td> data cells
+  │  ...     │ ... │  ...   │
+  └──────────┴─────┴────────┘
+                                 ← <tfoot> (empty here, used for totals/summaries)
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Table Demo</title>
+  </head>
+  <body>
+
+    <!-- 
+      <table border="1">
+      The 'border' attribute adds a 1px border around each cell.
+      In modern HTML, use CSS (border-collapse, border) instead of the attribute.
+    -->
+    <table border="1">
+
+      <!-- thead: Contains the column header row -->
+      <thead>
+        <tr>
+          <th>Name</th>  <!-- Header for the Name column -->
+          <th>Age</th>   <!-- Header for the Age column -->
+          <th>City</th>  <!-- Header for the City column -->
+        </tr>
+      </thead>
+
+      <!-- tbody: Contains the actual data rows -->
+      <tbody>
+        <tr>
+          <td>Vikas</td>
+          <td>25</td>
+          <td>Agra</td>
+        </tr>
+        <tr>
+          <td>Vikas</td>
+          <td>25</td>
+          <td>Agra</td>
+        </tr>
+        <tr>
+          <td>Vikas</td>
+          <td>25</td>
+          <td>Agra</td>
+        </tr>
+        <tr>
+          <td>Vikas</td>
+          <td>25</td>
+          <td>Agra</td>
+        </tr>
+        <tr>
+          <td>Vikas</td>
+          <td>25</td>
+          <td>Agra</td>
+        </tr>
+      </tbody>
+
+      <!-- tfoot: Used for summary/total rows at the bottom of the table (empty here) -->
+      <tfoot></tfoot>
+
+    </table>
+  </body>
+</html>

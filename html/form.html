@@ -1,0 +1,168 @@
+<!doctype html>
+<!--
+  form.html
+  ---------
+  Purpose: Demonstrates how to build structured HTML forms using semantic elements.
+
+  Key Concepts Covered:
+  - <form>         : The container for all form elements. Key attributes:
+                       • action  — URL where form data is sent on submission.
+                       • method  — HTTP method: "get" (data in URL) or "post" (data in request body).
+  - <fieldset>     : Groups related form controls together visually and semantically.
+  - <legend>       : Provides a caption/title for a <fieldset> group.
+  - <label>        : Associates a text description with an input.
+                       • 'for' attribute must match the 'id' of the input it labels.
+                       • Improves accessibility — clicking the label focuses the input.
+  - <input>        : Various input types used here:
+                       • type="text"     — For first/last name fields.
+                       • type="email"    — For email address.
+                       • type="password" — For password fields (characters are hidden).
+                       • type="checkbox" — For boolean toggle (e.g., agree to terms).
+                       • type="submit"   — Button to submit the form.
+  - <select>       : Dropdown menu for choosing from predefined options.
+  - <textarea>     : Multi-line text area for longer input (e.g., feedback).
+  - required       : HTML validation attribute — prevents submission if the field is empty.
+
+  Form Structure:
+  ┌─────────────────────────────────┐
+  │         Application Form        │  ← outer <fieldset>
+  │  ┌───────────────────────────┐  │
+  │  │      Personal Info        │  │  ← nested <fieldset>: First Name, Last Name
+  │  └───────────────────────────┘  │
+  │  ┌───────────────────────────┐  │
+  │  │      Contact Info         │  │  ← nested <fieldset>: Email, Password, Confirm Password
+  │  └───────────────────────────┘  │
+  │  ┌───────────────────────────┐  │
+  │  │         Choices           │  │  ← nested <fieldset>: Meal dropdown, Feedback textarea
+  │  └───────────────────────────┘  │
+  │  ☐ Agree to term and conditions │
+  │  [Submit]                       │
+  └─────────────────────────────────┘
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Form Demo</title>
+  </head>
+  <body>
+
+    <!-- 
+      Simple form example (commented out for reference):
+      - action="table.html"  → on submit, navigate/send data to table.html
+      - method="post"        → send data in the HTTP request body
+    -->
+    <!-- <form action="table.html" method="post">
+      <label for="Fullname">Fullname:</label>
+      <input type="text" name="fullname" id="" placeholder="name" />
+      <br />
+      <label for="email">email:</label>
+      <input type="email" name="email" id="" placeholder="email" />
+      <br />
+      <input type="submit" value="Submit" />
+    </form> -->
+
+    <!-- Main form: action="" means it submits to the current page URL -->
+    <form action="">
+
+      <!-- Outer fieldset groups the entire application form -->
+      <fieldset>
+        <legend>Application Form</legend>
+
+        <!-- Section 1: Personal Information -->
+        <fieldset>
+          <legend>Personal Info</legend>
+
+          <!-- Label linked to the first name input via 'for' + 'id' matching -->
+          <label for="First Name">FirstName:</label>
+          <input
+            type="text"
+            name="fname"
+            id=""
+            placeholder="Enter your first name"
+            required        <!-- 'required' makes this field mandatory before form can be submitted -->
+          />
+          <br /><br />
+
+          <label for="Last Name">Lname:</label>
+          <input
+            type="text"
+            name="lname"
+            id=""
+            placeholder="enter your lastname"
+            required
+          />
+        </fieldset>
+
+        <!-- Section 2: Contact Information -->
+        <fieldset>
+          <legend>Contact Info</legend>
+
+          <label for="Email">Email:</label>
+          <input
+            type="email"
+            name="email"
+            id=""
+            required
+            placeholder="enter your email"
+          />
+          <br /><br />
+
+          <!-- Password field — input characters are masked -->
+          <label for="Password">Password:</label>
+          <input
+            type="password"
+            name="pass"
+            id=""
+            placeholder="enter password"
+          />
+          <br /><br />
+
+          <!-- Confirm password — should match the password field (validated via JS in practice) -->
+          <label for="Password">Cnf Password:</label>
+          <input
+            type="password"
+            name="pass"
+            id=""
+            placeholder="enter cnf password"
+          />
+        </fieldset>
+
+        <!-- Section 3: User Preferences & Feedback -->
+        <fieldset>
+          <legend>Choices</legend>
+
+          <!-- Dropdown select for meal preference -->
+          <label for="Meal">Meal Preference:</label>
+          <select name="" id="">
+            <option value="">Select a Meal</option>   <!-- Placeholder option -->
+            <option value="">1</option>
+            <option value="">2</option>
+          </select>
+          <br /><br />
+
+          <!-- Textarea for multi-line feedback input; 'rows' controls visible height -->
+          <label for="feedback">Feedback/suggestions:</label>
+          <textarea name="" id="" rows=""></textarea>
+        </fieldset>
+
+        <!-- Checkbox: user must agree to terms before submitting -->
+        <input type="checkbox" name="" id="" />
+        <label for="">Agree to term and conditions</label>
+        <br /><br />
+
+        <!-- Submit button: triggers form validation and sends data to 'action' URL -->
+        <input type="submit" value="Submit" />
+
+      </fieldset>
+    </form>
+
+    <!-- External link: opens Bootstrap docs in a new tab -->
+    <!-- target="_blank" opens the link in a new browser tab -->
+    <a
+      href="https://getbootstrap.com/docs/5.0/getting-started/introduction/"
+      target="_blank"
+      >Click here</a
+    >
+  </body>
+</html>

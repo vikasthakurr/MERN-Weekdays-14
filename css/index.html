@@ -1,0 +1,121 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║                     CSS — A Brief History                           ║
+  ╠══════════════════════════════════════════════════════════════════════╣
+  ║                                                                      ║
+  ║  CSS (Cascading Style Sheets) is a language used to style and        ║
+  ║  visually present HTML documents — controlling layout, colors,       ║
+  ║  fonts, spacing, animations, and more.                               ║
+  ║                                                                      ║
+  ║  Timeline:                                                           ║
+  ║  ─────────────────────────────────────────────────────────────────   ║
+  ║  1994  → Håkon Wium Lie proposed CSS while working at CERN.          ║
+  ║           HTML lacked any way to style documents; formatting was     ║
+  ║           hacked using <font>, <center>, and table tricks.           ║
+  ║                                                                      ║
+  ║  1996  → CSS Level 1 (CSS1) released by W3C.                        ║
+  ║           Covered: font properties, colors, text alignment,          ║
+  ║           margins, padding, basic box model.                         ║
+  ║                                                                      ║
+  ║  1998  → CSS Level 2 (CSS2) released.                               ║
+  ║           Added: positioning (absolute/relative/fixed), z-index,     ║
+  ║           media types, generated content (:before, :after).          ║
+  ║                                                                      ║
+  ║  2004+ → CSS Level 2.1 (CSS2.1) — bug-fix revision of CSS2.         ║
+  ║           Became the stable, widely-implemented foundation.           ║
+  ║                                                                      ║
+  ║  2011+ → CSS Level 3 (CSS3) — modular approach (no single spec).    ║
+  ║           Each feature became its own module:                        ║
+  ║             • Flexbox         → flexible 1D layouts                  ║
+  ║             • Grid            → powerful 2D layouts                  ║
+  ║             • Animations      → @keyframes, transitions              ║
+  ║             • Media Queries   → responsive / mobile-first design     ║
+  ║             • Variables       → custom properties (--var-name)       ║
+  ║             • Selectors L4    → :is(), :where(), :has()              ║
+  ║             • Border-radius, box-shadow, gradients, transforms       ║
+  ║                                                                      ║
+  ║  Today → CSS continues evolving with container queries, cascade      ║
+  ║           layers (@layer), :has() selector, nesting, and more.       ║
+  ║                                                                      ║
+  ╠══════════════════════════════════════════════════════════════════════╣
+  ║                    3 Types / Ways to Apply CSS                       ║
+  ╠══════════════════════════════════════════════════════════════════════╣
+  ║                                                                      ║
+  ║  1. INLINE CSS                                                       ║
+  ║     ─────────────────────────────────────────────────────────────    ║
+  ║     Written directly inside an element's 'style' attribute.          ║
+  ║     Syntax: <tag style="property: value;">                           ║
+  ║     Example: <h1 style="color: red;">Hello</h1>                     ║
+  ║                                                                      ║
+  ║     ✅ Pros: Highest specificity, quick for one-off overrides.       ║
+  ║     ❌ Cons: Not reusable, hard to maintain, mixes content & style.  ║
+  ║                                                                      ║
+  ║  2. INTERNAL CSS (Embedded)                                          ║
+  ║     ─────────────────────────────────────────────────────────────    ║
+  ║     Written inside a <style> tag in the <head> section of the page.  ║
+  ║     Syntax: <style> selector { property: value; } </style>           ║
+  ║     Visible in this file: the h1 { color: yellow; } block below.    ║
+  ║                                                                      ║
+  ║     ✅ Pros: Scoped to one page, no extra file needed.               ║
+  ║     ❌ Cons: Not shared across pages, increases page size.           ║
+  ║                                                                      ║
+  ║  3. EXTERNAL CSS                                                     ║
+  ║     ─────────────────────────────────────────────────────────────    ║
+  ║     Written in a separate .css file and linked via <link> in <head>. ║
+  ║     Syntax: <link rel="stylesheet" href="style.css" />               ║
+  ║     Visible in this file: linking to "style.css" (h1 → color: blue) ║
+  ║                                                                      ║
+  ║     ✅ Pros: Reusable across multiple pages, easy to maintain,       ║
+  ║              cached by the browser for faster page loads.            ║
+  ║     ❌ Cons: Requires an extra HTTP request (minor with caching).    ║
+  ║                                                                      ║
+  ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   ║
+  ║  CASCADE PRIORITY (Specificity Order — Highest → Lowest):           ║
+  ║    Inline CSS  >  Internal CSS  >  External CSS                      ║
+  ║                                                                      ║
+  ║  This is why the h1 below appears YELLOW (internal) instead of       ║
+  ║  BLUE (external style.css) — internal CSS overrides external.        ║
+  ║  Add style="color: red;" on the h1 and it would override both.       ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Types Demo</title>
+
+    <!-- 
+      TYPE 3 — EXTERNAL CSS
+      Links an external stylesheet file (style.css) to this HTML document.
+      style.css sets: h1 { color: blue; }
+      'rel="stylesheet"' tells the browser this linked file is a CSS stylesheet.
+    -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- 
+      TYPE 2 — INTERNAL CSS (Embedded)
+      Styles written directly in the <head> inside a <style> block.
+      This applies only to this HTML file/page.
+      Here it sets h1 to yellow — this OVERRIDES the external blue color
+      because internal CSS has higher specificity than external CSS.
+    -->
+    <style>
+      h1 {
+        color: yellow;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- 
+      TYPE 1 — INLINE CSS
+      Applied directly on the element using the 'style' attribute.
+      This has the HIGHEST priority and overrides both internal and external CSS.
+      Example (commented out): style="color: red;"
+      Uncomment the style below to see inline CSS take precedence over all others.
+    -->
+    <h1 /* style="color: red;" */>vikas</h1>
+
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+  Aria.html
+  ---------
+  Purpose: Demonstrates the use of ARIA (Accessible Rich Internet Applications) attributes
+           to improve accessibility for users relying on assistive technologies (e.g., screen readers).
+
+  What is ARIA?
+  - ARIA is a set of HTML attributes defined by the W3C WAI-ARIA specification.
+  - It helps communicate the role, state, and properties of UI elements to assistive technologies
+    when native HTML semantics are not sufficient.
+  - ARIA does NOT change appearance or behavior — it only affects accessibility APIs.
+
+  Key ARIA Attributes Used:
+  - role               : Defines what kind of UI element this is (e.g., "progressbar", "button").
+                          Use native HTML elements when possible — ARIA role is a fallback.
+  - aria-valuemin      : The minimum allowed value for a range widget (e.g., progress bar).
+  - aria-valuemax      : The maximum allowed value for a range widget.
+  - aria-valuenow      : The current value of the range widget (e.g., progress is at 40 out of 100).
+  - aria-label         : Provides an accessible name/label for an element that has no visible text label.
+
+  Important Rules (ARIA Best Practices):
+  1. Use semantic HTML first (e.g., <button>, <progress>) — ARIA only when necessary.
+  2. Do not use invalid/custom roles (e.g., role="loginbtn" is not a valid WAI-ARIA role).
+  3. Interactive elements with ARIA roles must be keyboard-accessible.
+  4. Keep 'aria-valuenow' between 'aria-valuemin' and 'aria-valuemax'.
+
+  Elements in this file:
+  - A <div> styled as a progress bar using ARIA range attributes.
+  - A <div> acting as a login button (NOTE: role="loginbtn" is invalid; should be role="button").
+  - A native <button> element — the preferred accessible way to create a clickable button.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARIA Accessibility Demo</title>
+  </head>
+  <body>
+
+    <!--
+      Progress Bar using ARIA:
+      - role="progressbar"  → tells screen readers this is a progress indicator.
+      - aria-valuemin="0"   → minimum value of progress (0%).
+      - aria-valuemax="100" → maximum value of progress (100%).
+      - aria-valuenow="40"  → current progress value (40% complete).
+      NOTE: Better alternative is the native <progress value="40" max="100"></progress> element.
+    -->
+    <div
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="40"
+    ></div>
+
+    <!--
+      Custom button using a <div> with ARIA:
+      - role="loginbtn"         → INVALID role. Valid ARIA role should be role="button".
+      - aria-label="Login button" → provides a text label read by screen readers
+                                    (useful when visible text is missing or unclear).
+      WARNING: Using a <div> as a button also requires tabindex="0" and keyboard event handlers
+               to be fully accessible. Prefer using <button> element instead.
+    -->
+    <div role="loginbtn" aria-label="Login button" aria->Login</div>
+
+    <!--
+      Native <button> element:
+      - Fully accessible by default — keyboard focusable, activatable with Enter/Space.
+      - No ARIA needed for a simple button. Prefer this over role="button" on a <div>.
+    -->
+    <button>Signup</button>
+
+  </body>
+</html>

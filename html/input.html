@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  input.html
+  ----------
+  Purpose: Demonstrates the various HTML <input> types and related form elements.
+
+  Key Concepts Covered:
+  - <input type="text">      : Single-line text field for general text input.
+  - <input type="email">     : Text field validated to accept email format (user@example.com).
+  - <input type="number">    : Numeric input field with optional min/max/step controls.
+  - <input type="password">  : Text field that masks characters for secure entry.
+  - <input type="radio">     : Radio button — only ONE option can be selected in a group (same 'name').
+  - <input type="file">      : Allows users to upload a file from their device.
+  - <input type="color">     : Opens a color picker UI for choosing a color value.
+  - <input type="range">     : Slider control for selecting a value within a range (default 0–100).
+  - <input type="datetime">  : Deprecated — use datetime-local instead.
+  - <input type="date">      : Date picker (year/month/day).
+  - <input type="time">      : Time picker (hours and minutes).
+  - <input type="week">      : Week picker (selects a specific week of a year).
+  - <input type="submit">    : Button that submits the form data.
+  - <textarea>               : Multi-line text input field.
+  - <select> + <option>      : Dropdown list allowing the user to select one or more options.
+
+  Common Attributes:
+  - name        : Key used when form data is submitted (key=value pair).
+  - id          : Unique identifier for the element (links <label> to input via 'for' attribute).
+  - placeholder : Hint text shown inside the input when it's empty.
+  - required    : Makes the field mandatory before form submission.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Input Types Demo</title>
+  </head>
+  <body>
+
+    <!-- Text input: for general single-line text like names -->
+    <input type="text" name="" id="" placeholder="enter your name" />
+    <br />
+
+    <!-- This input was commented out (kept for reference) -->
+    <!-- <input type="text" name="" id="" /> -->
+
+    <!-- Email input: browser validates that the value looks like an email -->
+    <input type="email" name="" id="" placeholder="enter email" />
+
+    <!-- Number input: only allows numeric values; browsers may show spinner arrows -->
+    <input type="number" name="" id="" placeholder="enter age" />
+    <br />
+
+    <!-- Password input: characters are masked/hidden as the user types -->
+    <input type="password" name="" id="" placeholder="enter password" />
+
+    <!-- Radio button: used for single selection from a group (share the same 'name') -->
+    <input type="radio" name="" id="" /> Male
+
+    <!-- Textarea: multi-line text input, resizable by the user -->
+    <textarea name="" id=""></textarea>
+
+    <!-- File input: opens a file dialog so the user can upload a file -->
+    <input type="file" name="" id="" />
+
+    <!-- Color input: opens a color picker dialog -->
+    <input type="color" name="" id="" />
+
+    <!-- Range input: renders as a draggable slider (default range: 0 to 100) -->
+    <input type="range" name="" id="" />
+
+    <!-- datetime input: deprecated — prefer 'datetime-local' in modern HTML -->
+    <input type="datetime" name="" id="" />
+    <br />
+
+    <!-- Date input: shows a calendar date picker -->
+    <input type="date" name="" id="" />
+    <br />
+
+    <!-- Time input: lets users select a time (HH:MM) -->
+    <input type="time" name="" id="" />
+
+    <!-- Week input: lets users select a specific week of the year -->
+    <input type="week" name="" id="" />
+    <br />
+
+    <!-- 
+      Select dropdown: allows the user to pick one option from a list.
+      - The first <option> acts as a placeholder/prompt.
+      - 'value' attribute is what gets submitted with the form.
+    -->
+    <select name="" id="">
+      <option value="">Select an option</option>
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+      <option value="option3">Option 3</option>
+    </select>
+
+    <!-- Submit button: submits the form data to the server -->
+    <input type="submit" value="Submit" />
+
+    <!-- NOTE: <input:Reset> is invalid HTML. The correct reset button syntax is: -->
+    <!-- <input type="reset" value="Reset" /> -->
+    <input:Reset>Reset</input:Reset>
+
+  </body>
+</html>

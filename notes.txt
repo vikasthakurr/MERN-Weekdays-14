@@ -1,1 +1,3 @@
 Notes: https://docs.google.com/spreadsheets/d/1it14n-2BTLIOlre4eO6EWZF5WoMYcndZrPAEo_JyOdY/edit?usp=sharing
+
+ARIA:https://www.w3.org/WAI/standards-guidelines/aria/
