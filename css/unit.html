@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Units - Notes & Examples</title>
+    <!-- 
+      CSS UNITS NOTES:
+      1. Absolute Units:
+         - px (Pixels): Fixed-size; 1px = 1/96th of 1 inch.
+         - cm, mm, in, pt, pc: Primarily used for print; not recommended for screen display.
+
+      2. Relative Units (Relative to something else):
+         - % (Percentage): Relative to the parent element's size.
+         - em: Relative to the font-size of the element itself (for font-size, it's relative to the parent).
+         - rem (Root em): Relative to the font-size of the root element (<html>). Highly recommended for accessibility.
+         - vw (Viewport Width): Relative to 1% of the width of the viewport (screen).
+         - vh (Viewport Height): Relative to 1% of the height of the viewport (screen).
+         - vmin/vmax: Relative to the smaller/larger dimension of the viewport.
+    -->
+    <style>
+      :root {
+        --primary-color: #27ae60;
+        --secondary-color: #2980b9;
+        --bg-color: #f4f7f6;
+        --text-color: #34495e;
+        --code-bg: #e8f6f3;
+        font-size: 16px; /* Base root font size */
+      }
+
+      body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .notes-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      }
+
+      h1 {
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+      }
+
+      h2 {
+        color: var(--secondary-color);
+        margin-top: 2rem;
+        font-size: 1.5rem;
+      }
+
+      .example-box {
+        background: var(--code-bg);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+
+      .demo {
+        padding: 10px;
+        margin: 5px 0;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        border-radius: 4px;
+      }
+
+      /* Unit Examples */
+      .px-demo {
+        width: 300px;
+        background-color: #e74c3c;
+      }
+
+      .percent-demo {
+        width: 100%; /* Full width of container */
+        background-color: #f1c40f;
+        color: #333;
+      }
+
+      .parent-em {
+        font-size: 20px;
+        padding: 10px;
+        background: #eee;
+        margin-top: 10px;
+      }
+
+      .em-demo {
+        font-size: 2em; /* 2 * 20px = 40px */
+        background-color: #8e44ad;
+      }
+
+      .rem-demo {
+        font-size: 2rem; /* 2 * 16px = 32px (regardless of parent) */
+        background-color: #2ecc71;
+      }
+
+      .vw-demo {
+        width: 25vw; /* 1/4th of screen width */
+        background-color: #3498db;
+      }
+
+      .vh-info {
+        border: 2px dashed var(--secondary-color);
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+
+      code {
+        background: #d1f2eb;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notes-container">
+      <h1>Understanding CSS Units</h1>
+
+      <section>
+        <h2>1. Absolute Units</h2>
+        <p>Absolute units are fixed and will appear as exactly that size.</p>
+        <div class="example-box">
+          <div class="demo px-demo">Pixels (300px)</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Relative Units</h2>
+        <p>Relative units specify a length relative to another length property.</p>
+
+        <div class="example-box">
+          <p><strong>Percentage (%):</strong> Relative to parent width.</p>
+          <div class="demo percent-demo">100% of Container Width</div>
+          
+          <p><strong>EM vs REM:</strong></p>
+          <div class="parent-em">
+            Parent div has <code>font-size: 20px</code>
+            <div class="demo em-demo">This is 2em (40px)</div>
+          </div>
+          <div class="demo rem-demo">This is 2rem (32px - relative to root 16px)</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. Viewport Units</h2>
+        <p>Relative to the browser window (viewport) size.</p>
+        <div class="example-box">
+          <div class="demo vw-demo">25vw (Width)</div>
+          <p class="vh-info">
+            This page's container padding is also using <code>rem</code>, and your current screen width is used to calculate the <code>vw</code> box above.
+          </p>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
+

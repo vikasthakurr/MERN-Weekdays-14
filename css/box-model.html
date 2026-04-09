@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Box Model - Notes</title>
+    <!-- 
+      THE CSS BOX MODEL:
+      Every element in web design is essentially a rectangular box. 
+      The Box Model consists of four layers:
+
+      1. CONTENT: 
+         - The actual content of the box, where text and images appear.
+         - Controlled by 'width' and 'height'.
+
+      2. PADDING: 
+         - The space between the content and the border.
+         - Transparent and internal to the box.
+         - Increases the clickable area and provides breathing room for content.
+
+      3. BORDER: 
+         - A line that goes around the padding and content.
+         - Can be styled with width, style (solid, dashed), and color.
+
+      4. MARGIN: 
+         - The space outside the border.
+         - Used to create space between different elements.
+         - Transparent and external to the box.
+
+      5. BOX-SIZING:
+         - content-box (Default): Width and height only apply to the content. 
+           Total width = width + padding + border.
+         - border-box: Width and height include padding and border. 
+           Total width = the specified width. (Easier for layouts!)
+    -->
+    <style>
+      :root {
+        --content-color: #3498db;
+        --padding-color: #2ecc71;
+        --border-color: #f1c40f;
+        --margin-color: #e67e22;
+        --text-color: #2c3e50;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 40px;
+      }
+
+      .notes-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      }
+
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      /* Demonstration Box */
+      .box-demo {
+        /* Box Sizing: border-box includes padding and border in the width */
+        box-sizing: border-box; 
+        
+        width: 100%;
+        background-color: var(--content-color);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        
+        /* Padding: Space inside the box */
+        padding: 40px;
+        
+        /* Border: Line around the box */
+        border: 15px solid var(--border-color);
+        
+        /* Margin: Space outside the box */
+        margin: 20px 0;
+        
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+      }
+
+      .box-demo:hover {
+        transform: scale(1.02);
+      }
+
+      .legend {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 30px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .color-box {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+        border-radius: 4px;
+      }
+
+      code {
+        background: #f8f9fa;
+        padding: 2px 5px;
+        border-radius: 4px;
+        color: #d63384;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notes-container">
+      <h1>The CSS Box Model</h1>
+      
+      <p>In CSS, the term <strong>"box model"</strong> is used when talking about design and layout. It is essentially a box that wraps around every HTML element.</p>
+
+      <!-- Visual Representation -->
+      <div class="box-demo">
+        CONTENT AREA
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="color-box" style="background: var(--content-color)"></div> Content</div>
+        <div class="legend-item"><div class="color-box" style="background: var(--padding-color)"></div> Padding (Hidden inner space)</div>
+        <div class="legend-item"><div class="color-box" style="background: var(--border-color)"></div> Border</div>
+        <div class="legend-item"><div class="color-box" style="background: var(--margin-color)"></div> Margin (Outer space)</div>
+      </div>
+
+      <div style="margin-top: 40px;">
+        <h3>Practical Tip: <code>box-sizing: border-box;</code></h3>
+        <p>By default, the <code>width</code> of an element only applies to the content. Adding padding and borders makes the element wider than you intended. Using <code>border-box</code> makes the <code>width</code> include padding and borders, which is much easier to manage!</p>
+      </div>
+    </div>
+  </body>
+</html>
+

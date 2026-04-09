@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Selectors and Combinators - Notes</title>
+    <!-- 
+      CSS SELECTORS NOTES:
+      1. Basic Selectors:
+         - Universal Selector (*): Matches every element on the page.
+         - Element Selector (e.g., h1, div): Matches elements by their tag name.
+         - Class Selector (.className): Matches elements with the specified class.
+         - ID Selector (#idName): Matches a unique element with the specified ID.
+         - Attribute Selector ([attr=value]): Matches elements based on an attribute or its value.
+
+      2. COMBINATORS:
+         - Descendant Selector (space): Matches all descendants of a specified element (e.g., div p).
+         - Child Selector (>): Matches only direct children of a specified element (e.g., div > p).
+         - Adjacent Sibling Selector (+): Matches the element immediately after another (e.g., h1 + p).
+         - General Sibling Selector (~): Matches all siblings following another (e.g., h1 ~ p).
+
+      3. PSEUDO-CLASSES & ELEMENTS:
+         - Pseudo-classes (:hover, :active, :nth-child()): Define a special state of an element.
+         - Pseudo-elements (::before, ::after, ::placeholder): Style specific parts of an element.
+    -->
+    <style>
+      :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #f39c12;
+        --bg-color: #f8f9fa;
+        --text-color: #2c3e50;
+        --code-bg: #e9ecef;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 20px;
+      }
+
+      .notes-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+
+      h1 {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+      }
+
+      h2 {
+        color: var(--secondary-color);
+        margin-top: 30px;
+      }
+
+      .example {
+        background: var(--code-bg);
+        padding: 15px;
+        border-left: 5px solid var(--primary-color);
+        margin: 10px 0;
+        font-family: 'Courier New', Courier, monospace;
+      }
+
+      /* Original Practice Styles */
+      #first {
+        color: #e74c3c;
+      }
+
+      .size {
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+
+      /* Combinator Example: nth-child pseudo-class */
+      .demo-list p:nth-child(3) {
+        color: #3498db;
+        font-weight: bold;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      input::placeholder {
+        color: #95a5a6;
+        font-style: italic;
+      }
+
+      h1:hover {
+        color: #2980b9;
+        transition: color 0.3s ease;
+      }
+
+      .image-demo img {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notes-container">
+      <h1>CSS Selectors and Combinators</h1>
+      
+      <section id="basics">
+        <h2>1. Basic Selectors</h2>
+        <p>Selectors are used to "find" (or select) the HTML elements you want to style.</p>
+        
+        <div class="example">
+          * { ... } /* Universal */<br>
+          h1 { ... } /* Element/Type */<br>
+          .class { ... } /* Class */<br>
+          #unique { ... } /* ID */<br>
+          [type="text"] { ... } /* Attribute */
+        </div>
+        
+        <div id="first">This text is styled using an ID selector (#first).</div>
+        <p class="size">This is a class selector (.size) example.</p>
+      </section>
+
+      <section id="combinators">
+        <h2>2. Combinators</h2>
+        <p>A combinator is something that explains the relationship between the selectors.</p>
+        
+        <ul>
+          <li><strong>Descendant Selector (space):</strong> <code>div p</code></li>
+          <li><strong>Child Selector (&gt;):</strong> <code>div &gt; p</code></li>
+          <li><strong>Adjacent Sibling Selector (+):</strong> <code>h1 + p</code></li>
+          <li><strong>General Sibling Selector (~):</strong> <code>h1 ~ p</code></li>
+        </ul>
+
+        <div class="demo-list">
+          <p>Item 1 (Normal)</p>
+          <p>Item 2 (Normal)</p>
+          <p>Item 3 (Styled via :nth-child(3) which is a pseudo-class)</p>
+          <p>Item 4 (Normal)</p>
+        </div>
+      </section>
+
+      <section id="interactive">
+        <h2>3. Interactive & Attribute Selectors</h2>
+        <p>Hover over the header above or look at the input below.</p>
+        <input type="text" placeholder="Type something here..." />
+      </section>
+
+      <section class="image-demo">
+        <h2>4. Media Demo</h2>
+        <img
+          src="https://images.pexels.com/photos/34568925/pexels-photo-34568925.jpeg"
+          alt="Abstract Background"
+          width="400"
+        />
+      </section>
+    </div>
+  </body>
+</html>
+
