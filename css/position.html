@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* 
+      ==========================================================================
+      CSS POSITIONING NOTES FOR STUDENTS
+      ==========================================================================
+      
+      The 'position' property specifies the type of positioning method used for an element.
+      Combined with top, bottom, left, and right, it determines the final location.
+
+      1. static (Default)
+         - Elements render in order as they appear in the document flow.
+         - Top, bottom, left, right, and z-index properties have NO effect.
+
+      2. relative
+         - Positioned relative to its normal position in the document flow.
+         - Offset properties (top/left/etc.) move it from its original spot.
+         - The original space it occupied is PRESERVED.
+         - Often used as a 'parent' for absolute-positioned children.
+
+      3. absolute
+         - Positioned relative to its NEAREST POSITIONED ANCESTOR (not static).
+         - If no positioned ancestor exists, it uses the document body.
+         - Removed from the normal document flow (other elements ignore it).
+         - Does NOT preserve its original space.
+
+      4. fixed
+         - Positioned relative to the VIEWPORT (the browser window).
+         - Stays in the same place even if the page is scrolled.
+         - Removed from the normal document flow.
+
+      5. sticky
+         - Toggles between 'relative' and 'fixed' based on the user's scroll position.
+         - It is 'relative' until a given offset (e.g., top: 0) is met in the viewport, 
+           then it "sticks" like 'fixed'.
+         - Must have at least one offset property (top, bottom, left, or right) defined.
+
+      6. z-index
+         - Specifies the stack order of an element (which one is in front).
+         - Only works on positioned elements (relative, absolute, fixed, or sticky).
+      ==========================================================================
+      */
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        width: 800px;
+        height: 9000px; 
+        background-color: beige;
+        /* Uncommenting relative makes this the 'containing block' for absolute items */
+        position: relative; 
+      }
+      .child {
+        width: 200px;
+        height: 100px;
+        background-color: red;
+        margin: 10px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .position-1 {
+        position: static; /* Default behavior: properties like 'left' are ignored */
+        left: 30px; 
+      }
+      .position-2 {
+        position: relative; /* Relative to its own normal position */
+        left: 40%; /* Moves 40% from its original left edge */
+      }
+      .position-3 {
+        position: absolute; /* Relative to nearest positioned ancestor (.container) */
+        top: 300px;
+        right: 0;
+        background-color: blue;
+      }
+      .position-4 {
+        position: fixed; /* Relative to the viewport (stays while scrolling) */
+        bottom: 20px;
+        right: 20px;
+        background-color: green;
+      }
+      .position-5 {
+        position: sticky; /* Stuck at top: 0 when scrolling past it */
+        top: 0;
+        background-color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="child position-1">postion-1</div>
+      <div class="child position-2">postion-2</div>
+      <div class="child position-3">postion-3</div>
+      <div class="child position-4">postion-4</div>
+      <div class="child position-5">postion-5</div>
+    </div>
+  </body>
+</html>

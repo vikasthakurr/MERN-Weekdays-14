@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* 
+      ==========================================================================
+      FLEXBOX (Flexible Box Layout) NOTES FOR STUDENTS
+      ==========================================================================
+      
+      Flexbox is a one-dimensional layout method for arranging items in rows or columns.
+      It consists of two main components:
+      1. Flex Container (Parent)
+      2. Flex Items (Children)
+
+      --------------------------------------------------------------------------
+      CONCEPT: THE TWO AXES
+      --------------------------------------------------------------------------
+      - Main Axis: The primary axis along which flex items are laid out. 
+                   (Horizontal if flex-direction is row, Vertical if column)
+      - Cross Axis: The axis perpendicular to the main axis.
+      --------------------------------------------------------------------------
+
+      A. FLEX CONTAINER PROPERTIES (Parent)
+      --------------------------------------------------------------------------
+      1. display: flex;              -> Initializes the flex container.
+      2. flex-direction:             -> Defines the direction of the main axis (row, row-reverse, column, column-reverse).
+      3. flex-wrap:                  -> Controls if items stretch to one line or wrap (nowrap, wrap, wrap-reverse).
+      4. flex-flow:                  -> Shorthand for flex-direction & flex-wrap (e.g., flex-flow: row wrap;).
+      5. justify-content:            -> Aligns items along the MAIN axis (flex-start, flex-end, center, space-between, space-around, space-evenly).
+      6. align-items:                -> Aligns items along the CROSS axis (stretch, flex-start, flex-end, center, baseline).
+      7. align-content:              -> Aligns multiple lines of items along the CROSS axis (only works when wrapping occurs).
+      8. gap:                        -> Sets space between items.
+
+      B. FLEX ITEM PROPERTIES (Children)
+      --------------------------------------------------------------------------
+      1. order:                      -> Controls the order in which items appear (default: 0).
+      2. flex-grow:                  -> Defines the ability for an item to grow if necessary (default: 0).
+      3. flex-shrink:                -> Defines the ability for an item to shrink if necessary (default: 1).
+      4. flex-basis:                 -> Defines the default size of an element before the remaining space is distributed.
+      5. flex:                       -> Shorthand for flex-grow, flex-shrink, and flex-basis (e.g., flex: 1 0 auto;).
+      6. align-self:                 -> Allows the default alignment (from align-items) to be overridden for individual items.
+      ==========================================================================
+      */
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        width: 100vw;
+        height: 100vh;
+        background-color: beige;
+        display: flex; /* Defines this element as a flex container */
+        flex-direction: column; /* Stacks children vertically */
+        /* justify-content aligns items along the MAIN axis (now vertical) */
+        justify-content: center; 
+        /* align-items aligns items along the CROSS axis (now horizontal) */
+        align-items: center;
+        gap: 10px; /* Space between flex items */
+      }
+      .child {
+        width: 200px;
+        height: 100px;
+        background-color: red;
+        display: flex; /* Nested flex container to center text inside */
+
+        justify-content: center; /* Centers horizontally (main axis of row by default) */
+        align-items: center; /* Centers vertically (cross axis) */
+      }
+      .child-2 {
+        /* align-self: flex-start; */
+        /* flex-basis: 200px; */
+        /* flex-grow: 2; */
+        /* flex-shrink: 2; */
+        order: 1;
+      }
+      .child-3 {
+        order: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="child child-1">child-1</div>
+      <div class="child child-2">child-2</div>
+      <div class="child child-3">child-3</div>
+      <!-- <div class="child child-4">child-4</div>
+      <div class="child child-5">child-5</div>
+      <div class="child child-6">child-6</div>
+      <div class="child child-7">child-7</div>
+      <div class="child child-8">child-8</div>
+      <div class="child child-9">child-9</div>
+      <div class="child child-10">child-10</div>
+      <div class="child child-11">child-11</div> -->
+    </div>
+  </body>
+</html>

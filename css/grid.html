@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* 
+      ==========================================================================
+      CSS GRID LAYOUT NOTES FOR STUDENTS
+      ==========================================================================
+      
+      CSS Grid is a two-dimensional layout system (rows AND columns).
+      It offers more control over complex layouts than Flexbox (which is 1D).
+
+      --------------------------------------------------------------------------
+      TERMINOLOGY:
+      --------------------------------------------------------------------------
+      - Grid Container: The element on which 'display: grid' is applied.
+      - Grid Item: Direct children of the grid container.
+      - Grid Line: The dividing lines that make up the structure of the grid.
+      - Grid Track: The space between two adjacent grid lines (row or column).
+      - Grid Cell: The space between four intersecting grid lines (like a table cell).
+      - Grid Area: Total space surrounded by four grid lines.
+
+      A. GRID CONTAINER PROPERTIES (Parent)
+      --------------------------------------------------------------------------
+      1. display: grid;              -> Initializes the element as a grid container.
+      2. grid-template-columns:      -> Defines the columns (e.g., 100px 1fr 2fr).
+      3. grid-template-rows:         -> Defines the rows.
+      4. grid-template-areas:        -> Defines a grid template by referencing names of grid areas.
+      5. grid-column-gap / row-gap:  -> Sets the size of the lines (gutters).
+      6. gap:                        -> Shorthand for row-gap and column-gap.
+      7. justify-items:              -> Aligns items along the row axis (inline).
+      8. align-items:                -> Aligns items along the column axis (block).
+      9. justify-content:            -> Aligns the grid container's contents along the row axis.
+      10. align-content:             -> Aligns the grid container's contents along the column axis.
+
+      B. GRID ITEM PROPERTIES (Children)
+      --------------------------------------------------------------------------
+      1. grid-column-start / end:    -> Determines an item's location within the columns.
+      2. grid-column:                -> Shorthand (e.g., 1 / 3 or 1 / span 2).
+      3. grid-row-start / end:       -> Determines an item's location within the rows.
+      4. grid-row:                   -> Shorthand.
+      5. grid-area:                  -> Assigns a name to an item or shorthand for row/col start/end.
+      6. justify-self:               -> Aligns a grid item inside a cell along the row axis.
+      7. align-self:                 -> Aligns a grid item inside a cell along the column axis.
+      ==========================================================================
+      */
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        width: 100vw;
+        height: 100vh;
+        background-color: beige;
+        display: grid; /* Enables CSS Grid */
+        
+        /* Creates 3 columns of equal width (Fractional units) */
+        grid-template-columns: repeat(3, 1fr);
+        
+        gap: 10px; /* Space between rows and columns */
+
+        /* Defines a visual layout map using area names */
+        grid-template-areas: 
+          "header header header" 
+          "sidebar content-1 content-1" 
+          "sidebar content-2 content-3" 
+          "footer footer footer";
+      }
+      .child {
+        background-color: red;
+        display: flex; /* Uses Flexbox inside grid items to center text */
+        justify-content: center;
+        align-items: center;
+      }
+      /* Assigning elements to the areas defined in the container */
+      .header { grid-area: header; }
+      .sidebar { grid-area: sidebar; }
+      .content-1 { grid-area: content-1; }
+      .content-2 { grid-area: content-2; }
+      .content-3 { grid-area: content-3; }
+      .footer { grid-area: footer; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="child header">child-1</div>
+      <div class="child sidebar">child-2</div>
+      <div class="child content-1">child-3</div>
+      <div class="child content-2">child-4</div>
+      <div class="child content-3">child-5</div>
+      <div class="child footer">child-6</div>
+    </div>
+  </body>
+</html>
