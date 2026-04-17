@@ -3,3 +3,6 @@ Notes: https://docs.google.com/spreadsheets/d/1it14n-2BTLIOlre4eO6EWZF5WoMYcndZr
 ARIA:https://www.w3.org/WAI/standards-guidelines/aria/
 
 Bootstrap:https://github.com/vikasthakurr/BootstrapV5
+
+problem:https://docs.google.com/document/d/1-RK2a54-51gbyUXdNUghleTNaDmMcfPO8gNnwzrmeQI/edit?usp=sharing
+
