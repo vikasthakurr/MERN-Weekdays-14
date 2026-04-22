@@ -18,8 +18,8 @@
 console.log("--- Testing var ---");
 console.log(a); // Output: undefined (Hoisted)
 var a = 10;
-var a = 20;    // Redeclaration allowed
-a = 30;         // Reassignment allowed
+var a = 20; // Redeclaration allowed
+a = 30; // Reassignment allowed
 console.log(a); // Output: 30
 
 function testVar() {
@@ -41,7 +41,7 @@ console.log("\n--- Testing let ---");
 // console.log(c); // ReferenceError: Cannot access 'c' before initialization (TDZ)
 let c = 10;
 // let c = 20;  // SyntaxError: Identifier 'c' has already been declared
-c = 30;         // Reassignment is fine
+c = 30; // Reassignment is fine
 console.log(c); // Output: 30
 
 if (true) {

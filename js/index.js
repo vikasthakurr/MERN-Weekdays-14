@@ -1,116 +1,69 @@
 /**
- * HISTORY OF JAVASCRIPT
+ * JAVASCRIPT INTERNAL WORKINGS & HISTORY: COMPREHENSIVE GUIDE
  * 
- * 1995: Created by Brendan Eich at Netscape Communications.
- *       - Developed in just 10 days for Netscape Navigator 2.0.
- *       - Original names: Mocha, then LiveScript, finally JavaScript.
- * 
- * 1996: Microsoft released JScript (Reverse-engineered version for IE3).
- *       - Netscape submitted JS to ECMA International for standardization.
- * 
- * 1997: ECMAScript 1 (ES1) was released as the official standard.
- * 
- * 1999: ES3 was released (Intro to Regex, Try/Catch, etc.).
- *       - Became the baseline for modern JS for a decade.
- * 
- * 2005: Rise of AJAX (Asynchronous JavaScript and XML).
- *       - Made Single Page Applications (SPAs) possible (Gmail, Google Maps).
- * 
- * 2008: Google released the V8 Engine (Chrome).
- *       - Drastically improved JS execution speed via JIT compilation.
- * 
- * 2009: ES5 was released (Strict mode, JSON support, Array methods).
- *       - Node.js was created by Ryan Dahl, bringing JS to the server.
- * 
- * 2015: ECMAScript 2015 (ES6) - A Major Milestone.
- *       - Introduced: let/const, arrow functions, classes, modules, promises, template literals.
- * 
- * 2016 - Present: Annual release cycle (ES2016, ES2017, etc.).
- *       - Features like Async/Await, Object.entries, Rest/Spread operators, etc.
- * 
- * Today: JavaScript is one of the most popular and versatile programming languages,
- *        powering the web, mobile apps (React Native), and server-side (Node.js).
+ * Understanding the history and engine mechanics of JavaScript is crucial for writing performant code.
  */
 
+// ==========================================
+// 1. HISTORY AND EVOLUTION
+// ==========================================
 /**
- * HOW JAVASCRIPT WORKS (THE NUTS & BOLTS)
+ * Definition: The timeline of JavaScript's development.
  * 
- * 1. DEFINITION:
- *    - JavaScript is a high-level, interpreted (or JIT-compiled), 
- *      multi-paradigm, single-threaded, and dynamic language.
- *    - It follows the ECMAScript specification.
+ * Key Milestones:
+ * - 1995: Created by Brendan Eich at Netscape (originally Mocha/LiveScript).
+ * - 1997: Standardized as ECMAScript 1 (ES1).
+ * - 2008: Google introduces the V8 Engine, revolutionizing execution speed.
+ * - 2009: Node.js released, bringing JS to backend servers.
+ * - 2015: ES6 (ECMAScript 2015) released, a massive update (let/const, arrows, classes).
+ * - Present: Annual release cycles ensuring constant modernization.
  * 
- * 2. JIT COMPILATION (JUST-IN-TIME):
- *    - Modern engines (like V8) don't just interpret code line-by-line.
- *    - They use a "JIT" compiler that compiles source code into machine code 
- *      during runtime.
- *    - Workflow: 
- *        A. Parsing (Source Code -> AST)
- *        B. Interpretation (Ignition): Fast startup, produces Bytecode.
- *        C. Profiling: The engine monitors "hot" code (frequently run).
- *        D. Optimization (TurboFan): Compiles hot code into highly optimized 
- *           machine code.
- *        E. Deoptimization: If assumptions about types change, it reverts to 
- *           bytecode.
- * 
- * 3. SINGLE-THREADED VS. MULTI-THREADED:
- *    - JS is technically single-threaded (one Call Stack). 
- *    - However, it handles concurrency using the EVENT LOOP.
- *    - Async tasks (timers, fetch, etc.) are offloaded to "Web APIs" 
- *      (provided by the browser/environment).
- *    - Once finished, they enter the Callback Queue (or Microtask Queue) 
- *      and are pushed back to the stack by the Event Loop when it's empty.
- *    - Modern JS has "Worker Threads" (Web Workers) for true parallelism, 
- *      but they share no state with the main thread.
- * 
- * 4. GARBAGE COLLECTION (MEMORY MANAGEMENT):
- *    - JS uses automatic memory management called Garbage Collection (GC).
- *    - The main algorithm is "Mark-and-Sweep":
- *        A. Mark: The GC starts from "roots" (global objects) and marks 
- *           everything reachable.
- *        B. Sweep: Everything not marked is considered unreachable and 
- *           its memory is reclaimed.
- *    - Orinoco (in V8) uses Generational GC:
- *        - Young Generation: Objects that die young (frequent GC).
- *        - Old Generation: Long-lived objects (less frequent GC).
+ * Use Case: Contextualizing why certain "legacy" features (like 'var' or type coercion quirks) exist alongside modern syntax.
  */
 
+// ==========================================
+// 2. JIT COMPILATION (How Code Runs)
+// ==========================================
 /**
- * THE PARSING PROCESS & PARSER BLOCKING
+ * Definition: JavaScript is Just-In-Time compiled. Modern engines (like V8) do not purely interpret code.
  * 
- * 1. TOKENIZATION (LEXICAL ANALYSIS):
- *    - The engine's "Scanner" reads the raw source code character-by-character.
- *    - It breaks the code into "Tokens" (smallest meaningful units).
- *    - Examples: Keywords (function, let), Identifiers (variable names), 
- *      Operators (+, =), and Punctuators ({, }, ;).
+ * Process:
+ * 1. Parsing: Source code is converted into an Abstract Syntax Tree (AST).
+ * 2. Interpretation: The Ignition interpreter quickly generates unoptimized Bytecode to start execution immediately.
+ * 3. Profiling & Optimization: The TurboFan compiler monitors running code. "Hot" (frequently used) code is compiled into highly optimized Machine Code.
+ * 4. Deoptimization: If dynamic types change unexpectedly, the engine throws away the machine code and reverts to slower Bytecode.
  * 
- * 2. SYNTAX ANALYSIS (PARSING):
- *    - The "Parser" takes the stream of tokens and turns them into an 
- *      ABSTRACT SYNTAX TREE (AST).
- *    - The AST is a tree representation of the structural relationships 
- *      between tokens.
- *    - If the code violates language rules (e.g., "let = 5;"), the parser 
- *      throws a "Syntax Error" during this phase.
+ * Dos and Don'ts:
+ * - DO: Write predictable code (e.g., keep object structures uniform, don't change variable types) to help the engine keep code optimized.
+ */
+
+// ==========================================
+// 3. EVENT LOOP & CONCURRENCY
+// ==========================================
+/**
+ * Definition: JavaScript is single-threaded (one Call Stack) but handles asynchronous operations via the Event Loop.
  * 
- * 3. PARSER-BLOCKING NATURE:
- *    - Browsers parse HTML from top to bottom.
- *    - When the HTML parser hits a `<script>` tag:
- *        A. It MUST stop parsing the HTML.
- *        B. It must download the script (if external).
- *        C. It must execute the script.
- *    - This "blocks" the rendering of the rest of the page, which can 
- *      lead to a slow user experience (white screen).
+ * Process:
+ * - Synchronous code executes immediately on the Call Stack.
+ * - Asynchronous tasks (setTimeout, fetch) are offloaded to Web APIs (browser).
+ * - Once complete, callbacks are pushed to the Task Queue (or Microtask Queue for Promises).
+ * - The Event Loop constantly checks: If the Call Stack is empty, it pushes the next item from the Queue onto the Stack.
  * 
- * 4. SOLUTIONS TO PARSER BLOCKING:
+ * Dos and Don'ts:
+ * - DON'T: Write heavy, synchronous computational loops. They will block the Call Stack and freeze the browser UI.
+ */
+
+// ==========================================
+// 4. PARSER BLOCKING
+// ==========================================
+/**
+ * Definition: When the browser's HTML parser encounters a `<script>` tag, it stops parsing HTML to download and execute the JS.
+ * Use Case: Optimizing page load speeds.
  * 
- *    A. Async attribute (`<script async>`):
- *       - Downloads the script in the background (non-blocking).
- *       - But as soon as it's downloaded, it pauses HTML parsing to execute.
- *       - Execution order is NOT guaranteed.
+ * Dos and Don'ts:
+ * - DO: Use the 'defer' attribute (`<script defer src="...">`) in modern HTML. It downloads the script in the background and executes it only after the HTML is fully parsed, maintaining order.
+ * - DON'T: Place heavy synchronous scripts in the `<head>` without 'defer' or 'async', as this causes a "white screen" delay for users.
  * 
- *    B. Defer attribute (`<script defer>`):
- *       - Downloads the script in the background.
- *       - Only executes AFTER the HTML parsing is fully complete.
- *       - Maintains execution order (scripts run in the order they appear).
- *       - Best for performance in most modern web apps.
+ * Corner Cases:
+ * - 'async' executes the script as soon as it downloads, which can break execution order if multiple scripts depend on each other. 'defer' guarantees execution order.
  */

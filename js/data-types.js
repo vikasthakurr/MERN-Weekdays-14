@@ -29,9 +29,9 @@
 */
 
 // --- PRIMITIVE EXAMPLE (Stack Memory) ---
-let a = 10;      // Value 10 stored in Stack
-let b = a;       // A copy of value 10 is created in Stack for 'b'
-b = 30;          // Changing 'b' doesn't affect 'a'
+let a = 10; // Value 10 stored in Stack
+let b = a; // A copy of value 10 is created in Stack for 'b'
+b = 30; // Changing 'b' doesn't affect 'a'
 console.log("Primitive a:", a); // 10
 console.log("Primitive b:", b); // 30
 
@@ -73,7 +73,6 @@ console.log("Type of age:", typeof age); // "undefined"
 let job = null;
 console.log("Type of job:", typeof job); // "object" (This is a historical bug in JS!)
 
-
 // --- OBJECT METHODS & PROTECTION ---
 let obj3 = {
   fname: "vikas",
@@ -83,7 +82,7 @@ let obj3 = {
 // Object.freeze(obj3): Makes object immutable (cannot add, delete, or change properties)
 Object.freeze(obj3);
 obj3.fname = "pratyush"; // Will not change in strict mode/will be ignored
-obj3.salary = 234;       // Will not be added
+obj3.salary = 234; // Will not be added
 console.log("Frozen Object:", obj3);
 
 /*

@@ -1,81 +1,84 @@
-/*
-  ============================================================
-  HOISTING & TEMPORAL DEAD ZONE (TDZ)
-  ============================================================
-  
-  1. WHAT IS HOISTING?
-  - Hoisting is a phenomenon in JavaScript where you can access 
-    variables and functions even before they are initialized.
-  - This happens because the JS Engine scans the code and allocates 
-    memory for all declarations during the "Memory Creation Phase" 
-    before executing the code.
+/**
+ * JAVASCRIPT HOISTING & TEMPORAL DEAD ZONE (TDZ): COMPREHENSIVE GUIDE
+ * 
+ * Hoisting is JavaScript's default behavior of moving declarations to the top of the current scope before execution.
+ */
 
-  ------------------------------------------------------------
-  2. HOISTING WITH var
-  ------------------------------------------------------------
-  - Variables declared with 'var' are hoisted and initialized 
-    with a default value of 'undefined'.
-*/
+// ==========================================
+// 1. HOISTING WITH var
+// ==========================================
+/**
+ * Definition: Variables declared with 'var' are hoisted to the top of their function/global scope and initialized with 'undefined'.
+ * Use Case: Understanding legacy code behavior.
+ * 
+ * Dos and Don'ts:
+ * - DON'T: Rely on hoisting to use 'var' variables before they are declared. It makes code confusing and prone to bugs.
+ * 
+ * Corner Cases:
+ * - Only the declaration is hoisted, NOT the initialization/assignment.
+ */
 
-console.log("var 'a' before declaration:", a); // Output: undefined
-var a = 10;
-console.log("var 'a' after declaration:", a);  // Output: 10
+console.log("var accessed before declaration:", legacyVar); // Outputs: undefined
+var legacyVar = 10;
+console.log("var accessed after assignment:", legacyVar); // Outputs: 10
 
-/*
-  ------------------------------------------------------------
-  3. HOISTING WITH let & const (TEMPORAL DEAD ZONE)
-  ------------------------------------------------------------
-  - 'let' and 'const' are also hoisted, but they are NOT initialized.
-  - They stay in a "Temporal Dead Zone" (TDZ) from the start of the 
-    block until the line they are initialized.
-  - Accessing them in the TDZ results in a ReferenceError.
-*/
+// ==========================================
+// 2. TEMPORAL DEAD ZONE (TDZ) - let & const
+// ==========================================
+/**
+ * Definition: 'let' and 'const' are hoisted to the top of their block scope, but they are NOT initialized. The time between entering the scope and the actual declaration is the Temporal Dead Zone.
+ * Use Case: Enforcing stricter coding practices where variables must be declared before use.
+ * 
+ * Dos and Don'ts:
+ * - DO: Always declare variables at the top of their respective scopes to avoid TDZ-related ReferenceErrors.
+ * 
+ * Corner Cases:
+ * - Accessing a variable in the TDZ throws a ReferenceError, which is safer than returning 'undefined' (like 'var' does).
+ */
 
-// console.log(b); // ReferenceError: Cannot access 'b' before initialization
-let b = 20;
-console.log("let 'b' after initialization:", b);
+// console.log(modernVar); // ReferenceError: Cannot access before initialization
+let modernVar = 20;
+console.log("let accessed after initialization:", modernVar); // Outputs: 20
 
-/*
-  ------------------------------------------------------------
-  4. HOISTING WITH FUNCTIONS
-  ------------------------------------------------------------
-  - FUNCTION DECLARATIONS: They are fully hoisted (the whole body is stored).
-  - FUNCTION EXPRESSIONS: They behave like variables (hoisted as undefined if 'var', TDZ if 'let/const').
-*/
+// ==========================================
+// 3. HOISTING WITH FUNCTIONS
+// ==========================================
+/**
+ * Definition: 
+ * - Function Declarations: Completely hoisted. The entire function body is moved to the top, allowing execution before declaration.
+ * - Function Expressions: Behave like variables. If assigned to 'var', they are hoisted as 'undefined'. If assigned to 'let'/'const', they fall into the TDZ.
+ * 
+ * Dos and Don'ts:
+ * - DO: Use function declarations if you prefer structuring your code with helper functions at the bottom.
+ * - DON'T: Try to execute function expressions before their assignment line.
+ */
 
-sayHello(); // Works! Full function is hoisted
-function sayHello() {
-  console.log("Hello from a hoisted function declaration!");
+// Works perfectly because it's a Function Declaration
+hoistedFunction(); 
+function hoistedFunction() {
+  console.log("Function Declaration executed successfully.");
 }
 
-// sayHi(); // TypeError: sayHi is not a function (if var) or ReferenceError (if let)
-var sayHi = function() {
-  console.log("Hi from a function expression!");
+// Throws TypeError (if var) or ReferenceError (if let/const)
+// notHoistedFunction(); 
+const notHoistedFunction = function() {
+  console.log("Function Expression.");
 };
 
-/*
-  ============================================================
-  SUMMARY:
-  - var: Hoisted -> initialized as undefined.
-  - function: Hoisted -> initialized with full content.
-  - let/const: Hoisted -> stays in TDZ (uninitialized).
-  ============================================================
-*/
+// ==========================================
+// 4. NESTED SCOPES & HOISTING
+// ==========================================
+/**
+ * Definition: Hoisting happens per scope. An inner function creates a new scope, and declarations within it are hoisted to the top of that specific inner function, not the global scope.
+ */
 
-// Re-including the User's original scope example with notes:
+var a = 100;
 function outer() {
-  /* 
-    'a' is accessible here because it's in the Global Execution Context's 
-    memory space, and 'outer' has a reference to its parent's scope.
-  */
-  console.log("Outer accessing 'a':", a);
+  console.log("Outer accessing global 'a':", a); // 100
 
   function inner() {
-    /* 
-      Lexical Scope: 'inner' can access variables in its own scope, 
-      its parent's scope (outer), and the global scope.
-    */
-    console.log("Inner accessing 'a':", a);
+    // If 'a' was declared inside inner() with var, this console.log would print 'undefined' due to inner hoisting.
+    console.log("Inner accessing global 'a':", a); // 100
   }
   inner();
 }

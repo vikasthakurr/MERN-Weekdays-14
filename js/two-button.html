@@ -10,14 +10,24 @@
     <button id="blue">blue</button>
 
     <script>
-      const greenBtn = (document.getElementById("green").onclick =
-        handleClick("green"));
-      const blueBtn = (document.getElementById("blue").onclick =
-        handleClick("blue"));
+      //   const greenBtn = (document.getElementById("green").onclick =
+      //     handleClick("green"));
+      //   const blueBtn = (document.getElementById("blue").onclick =
+      //     handleClick("blue"));
 
-      function handleClick(color) {
-        document.body.style.backgroundColor = color;
+      //   function handleClick(color) {
+      //     return function () {
+      //       document.body.style.backgroundColor = color;
+      //     };
+      //   }
+      function mailer(to) {
+        return function (sub) {
+          return function (body) {
+            console.log(` mail send To: ${to}, Subject: ${sub}, Body: ${body}`);
+          };
+        };
       }
+      mailer("abc@gmail.com")("hello")("this is the body of mail");
     </script>
   </body>
 </html>
