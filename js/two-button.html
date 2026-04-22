@@ -10,24 +10,36 @@
     <button id="blue">blue</button>
 
     <script>
-      //   const greenBtn = (document.getElementById("green").onclick =
-      //     handleClick("green"));
-      //   const blueBtn = (document.getElementById("blue").onclick =
-      //     handleClick("blue"));
+        const greenBtn = (document.getElementById("green").onclick =
+          handleClick("green"));
+        const blueBtn = (document.getElementById("blue").onclick =
+          handleClick("blue"));
 
-      //   function handleClick(color) {
-      //     return function () {
-      //       document.body.style.backgroundColor = color;
-      //     };
-      //   }
-      function mailer(to) {
-        return function (sub) {
-          return function (body) {
-            console.log(` mail send To: ${to}, Subject: ${sub}, Body: ${body}`);
+        function handleClick(color) {
+          return function () {
+            document.body.style.backgroundColor = color;
           };
-        };
-      }
-      mailer("abc@gmail.com")("hello")("this is the body of mail");
+        }
+        /*
+         * HOW THIS IS WORKING (Pointer-wise Explanation):
+         * 
+         * 1. Higher-Order Function: `handleClick` is a higher-order function because it returns another function.
+         * 
+         * 2. Immediate Execution: When the script loads, `handleClick("green")` runs immediately. 
+         *    It does NOT wait for a click to run the outer function.
+         * 
+         * 3. Returning a Function: `handleClick("green")` returns the INNER function:
+         *    `function () { document.body.style.backgroundColor = color; }`
+         * 
+         * 4. Assigning the Handler: This returned inner function is what actually gets assigned to `onclick`.
+         * 
+         * 5. Closures in Action: The inner function forms a "Closure". Even after `handleClick` finishes running, 
+         *    the inner function remembers the `color` variable ("green" or "blue") that was passed to it.
+         * 
+         * 6. The Click Event: Later, when the user finally clicks the button, the browser calls the inner function, 
+         *    which successfully changes the background color using that remembered `color` variable.
+         */
+      
     </script>
   </body>
 </html>
