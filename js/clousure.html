@@ -7,17 +7,50 @@
   </head>
   <body>
     <script>
+      /*
+       * ============================================================================
+       * CLOSURES IN JAVASCRIPT
+       * ============================================================================
+       * 
+       * A Closure is a feature in JavaScript where an inner function has access to 
+       * the outer (enclosing) function's variables, even after the outer function 
+       * has finished executing.
+       * 
+       * Think of it as a function carrying a "backpack" of the variables it needs 
+       * from its surrounding environment, no matter where it goes.
+       */
+
       function outer() {
-        let a = 10;
+        let a = 10; // 'a' is a local variable created by outer()
+
+        // inner() is a closure. It has access to its own scope, 
+        // the outer function's scope (can access 'a'), and the global scope.
         function inner() {
-          console.log(a);
+          console.log(a); 
         }
+        
+        // We return the inner function itself, NOT the result of calling it.
         return inner;
       }
 
+      /*
+       * HOW THIS EXECUTION WORKS:
+       * 1. We call outer(). It creates variable 'a' and function 'inner'.
+       * 2. It returns 'inner' and finishes executing. Normally, local variables 
+       *    like 'a' would be destroyed from memory because outer() is done.
+       * 3. HOWEVER, because 'inner' was returned and saved in 'res', 
+       *    a closure is formed. 'inner' holds onto the memory reference of 'a'.
+       */
       let res = outer();
-      // console.log(res);
-      res();
+      
+      // console.log(res); // If uncommented, this shows it holds the inner function definition.
+      
+      /*
+       * 4. We execute 'res' (which is actually the 'inner' function).
+       * Even though outer() is completely finished, inner() still remembers 
+       * its surrounding environment and knows that a = 10!
+       */
+      res(); // Output: 10
     </script>
   </body>
 </html>
