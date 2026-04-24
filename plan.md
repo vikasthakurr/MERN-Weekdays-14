@@ -258,7 +258,12 @@
 
 
 
-
+# Some new hooks in react 19
+- use optimisitic
+- use action 
+- use view transition
+- use form status
+- use result
 
 
 
