@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .dp {
+        height: 500px;
+        width: 200px;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <h1 class="hey">item-1</h1>
+    <h1 class="hey">item-2</h1>
+    <h1>item-3</h1>
+    <h1>item-4</h1> -->
+    <img src="" alt="" />
+
+    <div id="container">
+      <p>item</p>
+    </div>
+  </body>
+  <script>
+    /* 
+      ==========================================================================
+      DOM (Document Object Model) in JavaScript
+      ==========================================================================
+      The DOM is a programming interface for web documents. It represents the 
+      page so that programs can change the document structure, style, and content.
+      The DOM represents the document as nodes and objects.
+
+      1. SELECTING ELEMENTS:
+      ----------------------
+      - document.getElementById('id'): Selects a single element by its ID.
+      - document.getElementsByClassName('class'): Returns an HTMLCollection of elements with the given class.
+      - document.getElementsByTagName('tag'): Returns an HTMLCollection of elements with the given tag name.
+      - document.querySelector('selector'): Returns the first element that matches a CSS selector (ID, Class, Tag).
+      - document.querySelectorAll('selector'): Returns a Static NodeList of all elements matching a CSS selector.
+
+      2. CREATING & REMOVING ELEMENTS:
+      --------------------------------
+      - document.createElement('tagName'): Creates a new element node.
+      - element.appendChild(child): Adds a node as the last child of an element.
+      - element.removeChild(child): Removes a child node from the element.
+      - element.remove(): Removes the element from the DOM (modern way).
+      - element.insertBefore(newNode, referenceNode): Inserts a node before another node.
+
+      3. MODIFYING CONTENT & ATTRIBUTES:
+      ----------------------------------
+      - element.innerText: Gets/sets the visible text content (respects CSS).
+      - element.textContent: Gets/sets the raw text content (ignores CSS).
+      - element.innerHTML: Gets/sets the HTML content inside an element.
+      - element.setAttribute(name, value): Sets an attribute value.
+      - element.getAttribute(name): Gets the value of an attribute.
+      - element.removeAttribute(name): Removes an attribute.
+
+      4. STYLING & CLASSES:
+      ---------------------
+      - element.style.property = 'value': Directly changes inline styles (e.g., element.style.color = 'red').
+      - element.classList.add('className'): Adds one or more classes.
+      - element.classList.remove('className'): Removes one or more classes.
+      - element.classList.toggle('className'): Toggles a class on/off.
+      - element.classList.contains('className'): Checks if a class exists.
+
+      5. NAVIGATION (Traversing the DOM):
+      -----------------------------------
+      - element.parentNode / element.parentElement: Access the parent.
+      - element.childNodes: Returns a NodeList of all children (including text nodes).
+      - element.children: Returns an HTMLCollection of child elements.
+      - element.firstChild / element.lastChild: Access first/last child node.
+      - element.firstElementChild / element.lastElementChild: Access first/last child element.
+      - element.nextSibling / element.previousSibling: Access adjacent nodes.
+      - element.nextElementSibling / element.previousElementSibling: Access adjacent elements.
+
+      6. EVENT LISTENERS:
+      -------------------
+      - element.addEventListener('event', callback): Attaches an event handler.
+      - element.removeEventListener('event', callback): Removes an event handler.
+
+      ==========================================================================
+    */
+
+    // let result = document.querySelector("#container");
+    // let heading1 = document.createElement("h2");
+    // // console.log(heading1);
+    // heading1.innerText = "this is created using vannila jss";
+    // console.log(heading1);
+
+    // result.appendChild(heading1);
+    let dp = document.createElement("img");
+    dp.setAttribute(
+      "src",
+      "https://images.pexels.com/photos/37191585/pexels-photo-37191585.jpeg",
+    );
+
+    dp.classList.add("dp");
+    document.querySelector("#container").appendChild(dp);
+    console.log(dp);
+  </script>
+</html>

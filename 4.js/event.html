@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .grandparent {
+        border: 1px solid black;
+        height: 600px;
+        width: 600px;
+      }
+      .parent {
+        border: 1px solid red;
+        height: 300px;
+        width: 300px;
+      }
+      .child {
+        border: 1px solid green;
+        height: 150px;
+        width: 150px;
+      }
+    </style>
+  </head>
+  <body class="body">
+    <div class="grandparent">
+      grandparent
+      <div class="parent">
+        parent
+        <div class="child">child</div>
+      </div>
+    </div>
+    <h1 id="data"></h1>
+  </body>
+  <script>
+    /* 
+      ==========================================================================
+      EVENTS IN JAVASCRIPT
+      ==========================================================================
+
+      1. THE EVENT OBJECT (event):
+      ---------------------------
+      When an event occurs, the browser creates an "event object", puts details 
+      about the event into it, and passes it as an argument to the handler.
+      - event.target: The most deeply nested element that caused the event.
+      - event.currentTarget: The element that the event listener is attached to.
+      - event.type: The type of event (e.g., 'click', 'mouseover').
+      - event.clientX / event.clientY: Mouse coordinates relative to the window.
+
+      2. EVENT BUBBLING:
+      ------------------
+      When an event happens on an element, it first runs the handlers on it, 
+      then on its parent, then all the way up on other ancestors.
+      - Most events bubble (e.g., click, keydown, etc.).
+      - To stop bubbling: event.stopPropagation().
+
+      3. EVENT CAPTURING (TRICKLING):
+      -------------------------------
+      The opposite of bubbling. The event goes down from the ancestor to the 
+      target element.
+      - To enable capturing, pass {capture: true} or true as the 3rd argument 
+        to addEventListener.
+      - Flow: Capturing Phase -> Target Phase -> Bubbling Phase.
+
+      4. EVENT DELEGATION:
+      --------------------
+      Instead of assigning a handler to many similar elements, we put a single 
+      handler on their common ancestor.
+      - We use event.target to see where the event actually happened.
+      - Benefits: Memory efficient, works for dynamically added elements.
+
+      5. PREVENT DEFAULT:
+      -------------------
+      - event.preventDefault(): Cancels the event if it is cancelable, meaning 
+        that the default action that belongs to the event will not occur.
+        Example: Prevents a link from following the URL or a form from submitting.
+
+      6. FAMOUS MOUSE EVENTS:
+      -----------------------
+      - 'click': Triggered when an element is clicked.
+      - 'dblclick': Triggered when an element is double-clicked.
+      - 'mousedown' / 'mouseup': Triggered when a mouse button is pressed/released.
+      - 'mouseenter' / 'mouseleave': Triggered when the mouse enters/leaves an element (doesn't bubble).
+      - 'mouseover' / 'mouseout': Triggered when the mouse moves over/out of an element (bubbles).
+      - 'mousemove': Triggered every time the mouse moves over an element.
+      - 'contextmenu': Triggered when the right mouse button is clicked (before the menu opens).
+
+      7. FAMOUS KEYBOARD EVENTS:
+      --------------------------
+      - 'keydown': Triggered when a key is first pressed down.
+      - 'keyup': Triggered when a key is released.
+      - 'keypress': Triggered when a character key is pressed (Deprecated, use keydown).
+      * Note: Use event.key to get the character and event.code to get the physical key code.
+
+      ==========================================================================
+    */
+
+    // const gp = document.querySelector(".grandparent");
+    // const p = document.querySelector(".parent");
+    // const c = document.querySelector(".child");
+
+    // gp.addEventListener("click", (event) => {
+    //   console.log("gp was clicked");
+    //   console.log(event);
+    //   //   event.stopPropagation();
+    // });
+    // p.addEventListener("click", (event) => {
+    //   console.log("p was clicked");
+    //   //event.stopPropagation();
+    // });
+    // c.addEventListener("click", (event) => {
+    //   console.log("c was clicked");
+    //   //event.stopPropagation();
+    // });
+    document.body.addEventListener("dblclick", (event) => {
+      //   console.log(event);
+      document.querySelector("#data").innerText =
+        `${event.target.className} was clicked`;
+    });
+  </script>
+</html>

@@ -96,7 +96,7 @@
 - Event Listeners
 - Common DOM Events
 - Event Bubbling & Capturing
-- Event Delegation
+- Event DelegationuseLayoutEffect can hurt performance. Prefer useEffect when possible.
 - DOM Projects (practice)
 - Callback Hell
 - Promises
