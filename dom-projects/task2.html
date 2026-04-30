@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .square {
+        width: 150px;
+        height: 150px;
+        margin: 10px;
+        /* background-color: red; */
+        display: inline-block;
+      }
+      .circle {
+        width: 150px;
+        height: 150px;
+        margin: 10px;
+        /* background-color: red; */
+        display: inline-block;
+        border-radius: 50%;
+      }
+      .rectangle {
+        width: 200px;
+        height: 150px;
+        margin: 10px;
+        /* background-color: red; */
+        display: inline-block;
+      }
+      .container {
+        width: 900px;
+        height: 600px;
+        background-color: beige;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="shapeNumber" placeholder="enter the shape number" />
+    <input type="text" id="shapeName" placeholder="enter the shape name" />
+    <input type="color" name="shapeColor" id="shapeColor" />
+    <button id="generate">Generate</button>
+    <div class="container"></div>
+  </body>
+  <script>
+    // Select the generate button
+    const generate = document.querySelector("#generate");
+    
+    // Listen for click events on the generate button
+    generate.addEventListener("click", (e) => {
+      // Capture all user inputs
+      const shapeNumber = document.querySelector("#shapeNumber").value;
+      const shapeName = document.querySelector("#shapeName").value;
+      const shapeColor = document.querySelector("#shapeColor").value;
+
+      // Validate that the shape name corresponds to a CSS class
+      if (
+        shapeName !== "square" &&
+        shapeName !== "circle" &&
+        shapeName !== "rectangle"
+      ) {
+        alert("Please enter a valid shape name: square, circle, or rectangle.");
+        return;
+      }
+
+      // Loop to create the requested number of shapes
+      for (let i = 0; i < shapeNumber; i++) {
+        // Create the element
+        const shape = document.createElement("div");
+        // Apply the class based on the shape name (square, circle, or rectangle)
+        shape.classList.add(shapeName);
+        // Set the background color dynamically from the color picker input
+        shape.style.backgroundColor = shapeColor;
+
+        // Add the shape to the UI container
+        document.querySelector(".container").appendChild(shape);
+      }
+    });
+  </script>
+</html>

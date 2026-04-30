@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .square {
+        width: 150px;
+        height: 150px;
+        margin: 10px;
+        background-color: red;
+        display: inline-block;
+      }
+      .container {
+        width: 700px;
+        height: 600px;
+        background-color: beige;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" placeholder="enter number of shape" id="shapeNumber" />
+    <button id="btn">Generate</button>
+
+    <div class="container"></div>
+  </body>
+  <script>
+    // Select the generate button by its ID
+    const generate = document.querySelector("#btn");
+
+    // Add a click event listener to the button
+    generate.addEventListener("click", (e) => {
+      // Get the number of shapes requested from the input field
+      const shapeValue = document.querySelector("#shapeNumber").value;
+      
+      // Loop to create the specified number of shapes
+      for (let i = 0; i < shapeValue; i++) {
+        // Create a new 'div' element for each shape
+        const shape = document.createElement("div");
+        // Add the 'square' class to apply predefined CSS styles
+        shape.classList.add("square");
+
+        // Append the new shape element to the container div
+        document.querySelector(".container").appendChild(shape);
+      }
+    });
+  </script>
+</html>

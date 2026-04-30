@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        width: 900px;
+        height: 600px;
+        background-color: beige;
+        border: 2px solid black;
+      }
+      .circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container"></div>
+  </body>
+  <script>
+    // Select the container where elements will be added
+    const container = document.querySelector(".container");
+
+    // Add a click listener to the container
+    container.addEventListener("click", (e) => {
+      // Define possible colors
+      const color = ["red", "blue", "green", "yellow", "purple", "orange"];
+      
+      // Select a random color
+      const randomIndex = Math.floor(Math.random() * color.length);
+      const shapeColor = color[randomIndex];
+
+      // Create the circle element
+      const shape = document.createElement("div");
+      shape.classList.add("circle");
+      shape.style.backgroundColor = shapeColor;
+
+      // Position the circle exactly where the user clicked
+      // e.clientX and e.clientY provide the mouse coordinates
+      // We subtract 50 to center the 100px circle on the cursor
+      shape.style.left = e.clientX - 50 + "px";
+      shape.style.top = e.clientY - 50 + "px";
+
+      // Append the circle to the container
+      container.appendChild(shape);
+    });
+  </script>
+</html>

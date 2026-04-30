@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad - Student Friendly Edition</title>
+    
+    <!-- External Resources -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS Variables - For easy theme management */
+        :root {
+            --bg-dark: #0f172a;
+            --sidebar-color: rgba(30, 41, 59, 0.8);
+            --accent-blue: #38bdf8;
+            --white: #ffffff;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex; /* Sidebar on left, workspace on right */
+            overflow: hidden;
+        }
+
+        /* SIDEBAR: Tools and Colors */
+        .sidebar {
+            width: 90px;
+            background: var(--sidebar-color);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            z-index: 10;
+        }
+
+        .icon-logo {
+            font-size: 28px;
+            color: var(--accent-blue);
+            margin-bottom: 40px;
+        }
+
+        .tool-btn {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .tool-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .tool-btn.active {
+            background: var(--accent-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .divider {
+            width: 40px;
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        /* COLOR PICKER STYLES */
+        .color-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .color-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-dot:hover {
+            transform: scale(1.15);
+        }
+
+        .color-dot.selected {
+            border-color: var(--white);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        #customColorPicker {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        /* WORKSPACE: Header and Canvas */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .canvas-area {
+            flex: 1;
+            background: white; /* Traditional paper color */
+            margin: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            cursor: crosshair;
+            overflow: hidden;
+        }
+
+        #drawingCanvas {
+            display: block;
+        }
+
+        /* FLOATING ACTION PANEL */
+        .action-panel {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 41, 59, 0.9);
+            padding: 15px 35px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .panel-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .btn-utility {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-utility:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-download {
+            background: var(--accent-blue);
+            color: var(--bg-dark);
+            border: none;
+        }
+
+        .btn-download:hover {
+            background: #7dd3fc;
+        }
+
+        /* Responsive slider */
+        input[type="range"] {
+            cursor: pointer;
+            accent-color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Side: Tool Navigation -->
+    <aside class="sidebar">
+        <div class="icon-logo"><i class="fas fa-edit"></i></div>
+        
+        <div class="tool-section">
+            <button class="tool-btn active" id="penMode" title="Draw">
+                <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button class="tool-btn" id="eraserMode" title="Erase">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="color-list" id="predefinedColors">
+            <div class="color-dot selected" style="background: #000000;" data-hex="#000000"></div>
+            <div class="color-dot" style="background: #ef4444;" data-hex="#ef4444"></div>
+            <div class="color-dot" style="background: #3b82f6;" data-hex="#3b82f6"></div>
+            <div class="color-dot" style="background: #22c55e;" data-hex="#22c55e"></div>
+            <div class="color-dot" style="background: #f59e0b;" data-hex="#f59e0b"></div>
+            <input type="color" id="customColorPicker" title="Custom Color">
+        </div>
+    </aside>
+
+    <!-- Right Side: The Main App -->
+    <main class="workspace">
+        <header>
+            <div>
+                <h2 style="font-weight: 700; letter-spacing: -0.5px;">Student <span style="color: var(--accent-blue);">Notepad</span></h2>
+                <p style="font-size: 13px; color: var(--text-dim);">Canvas API + DOM Manipulation</p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-utility" id="resetBtn">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn-utility btn-download" id="downloadBtn">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+            </div>
+        </header>
+
+        <section class="canvas-area" id="canvasWrapper">
+            <canvas id="drawingCanvas"></canvas>
+        </section>
+
+        <!-- Bottom Controls -->
+        <div class="action-panel">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span class="panel-label">STOKE WEIGHT</span>
+                <input type="range" id="strokeSlider" min="1" max="40" value="5">
+                <span id="strokeDisplay" style="width: 20px; font-weight: 700; color: var(--accent-blue);">5</span>
+            </div>
+            <div class="divider" style="height: 20px; width: 1px; margin: 0;"></div>
+            <div class="panel-label" id="currentActionText">Mode: Drawing</div>
+        </div>
+    </main>
+
+    <script>
+        // --- 1. DOM ELEMENT SELECTION ---
+        // We grab the elements from the HTML so we can control them with JS
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d'); // This is the "paintbrush" of the canvas
+        const wrapper = document.getElementById('canvasWrapper');
+        
+        const penBtn = document.getElementById('penMode');
+        const eraserBtn = document.getElementById('eraserMode');
+        const strokeSlider = document.getElementById('strokeSlider');
+        const strokeDisplay = document.getElementById('strokeDisplay');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const actionText = document.getElementById('currentActionText');
+        const colorDots = document.querySelectorAll('.color-dot');
+        const customPicker = document.getElementById('customColorPicker');
+
+        // --- 2. APPLICATION STATE ---
+        // These variables keep track of what the user is currently doing
+        let isDrawing = false;      // Is the mouse button held down?
+        let lastX = 0;             // Previous X coordinate of the mouse
+        let lastY = 0;             // Previous Y coordinate of the mouse
+        let activeTool = 'pen';    // Current tool: 'pen' or 'eraser'
+        let drawColor = '#000000'; // Selected color (hex code)
+        let drawWidth = 5;         // Selected line thickness
+
+        // --- 3. CANVAS INITIALIZATION ---
+        // This function makes the canvas fit perfectly inside its container
+        function setupCanvas() {
+            // Set internal drawing resolution to match visual size
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+            
+            // Set default line styles (how the ends of lines look)
+            ctx.lineCap = 'round';  // Makes ends of lines circular
+            ctx.lineJoin = 'round'; // Makes corners where lines meet circular
+        }
+
+        // Call the setup immediately
+        setupCanvas();
+
+        // Handle window resizing (so drawings don't get stretched)
+        window.addEventListener('resize', () => {
+            // Note: Resizing the canvas clears it, so we usually save content first
+            const savedImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            setupCanvas();
+            ctx.putImageData(savedImage, 0, 0); // Put the drawing back
+        });
+
+        // --- 4. CORE DRAWING LOGIC ---
+        
+        // Start the path when mouse is clicked
+        function startAction(event) {
+            isDrawing = true;
+            // Record where the user first clicked
+            lastX = event.offsetX;
+            lastY = event.offsetY;
+        }
+
+        // Draw a line as the mouse moves
+        function performDraw(event) {
+            if (!isDrawing) return; // Only draw if the mouse is held down
+
+            // 1. Start a new drawing path
+            ctx.beginPath();
+            
+            // 2. Move to the last known position
+            ctx.moveTo(lastX, lastY);
+            
+            // 3. Create a line to the new mouse position
+            ctx.lineTo(event.offsetX, event.offsetY);
+            
+            // 4. Set the color and width for this stroke
+            // TIP: Eraser is just a "white" brush on our white canvas!
+            if (activeTool === 'eraser') {
+                ctx.strokeStyle = '#ffffff'; 
+            } else {
+                ctx.strokeStyle = drawColor;
+            }
+            ctx.lineWidth = drawWidth;
+            
+            // 5. Actually render the line onto the canvas
+            ctx.stroke();
+
+            // 6. Update the last known position for the next frame
+            lastX = event.offsetX;
+            lastY = event.offsetY;
+        }
+
+        // Stop drawing when mouse is released
+        function stopAction() {
+            isDrawing = false;
+        }
+
+        // --- 5. UI CONTROL HANDLERS ---
+
+        // Switch to Pen Tool
+        penBtn.onclick = () => {
+            activeTool = 'pen';
+            penBtn.classList.add('active');
+            eraserBtn.classList.remove('active');
+            actionText.innerText = 'Mode: Drawing';
+        };
+
+        // Switch to Eraser Tool
+        eraserBtn.onclick = () => {
+            activeTool = 'eraser';
+            eraserBtn.classList.add('active');
+            penBtn.classList.remove('active');
+            actionText.innerText = 'Mode: Erasing';
+        };
+
+        // Handle predefined color selection
+        colorDots.forEach(dot => {
+            dot.onclick = () => {
+                // Update selection UI
+                document.querySelector('.color-dot.selected').classList.remove('selected');
+                dot.classList.add('selected');
+                
+                // Update state
+                drawColor = dot.getAttribute('data-hex');
+                
+                // If we were erasing, automatically switch back to pen
+                if(activeTool === 'eraser') penBtn.click();
+            };
+        });
+
+        // Handle custom color picker
+        customPicker.oninput = (e) => {
+            drawColor = e.target.value;
+            // Remove selection from predefined dots
+            document.querySelector('.color-dot.selected')?.classList.remove('selected');
+            if(activeTool === 'eraser') penBtn.click();
+        };
+
+        // Handle stroke width slider
+        strokeSlider.oninput = (e) => {
+            drawWidth = e.target.value;
+            strokeDisplay.innerText = drawWidth;
+        };
+
+        // Clear everything
+        resetBtn.onclick = () => {
+            if(confirm("This will clear all your work. Are you sure?")) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        };
+
+        // Export as Image
+        downloadBtn.onclick = () => {
+            // 1. Create a "virtual" link element
+            const link = document.createElement('a');
+            // 2. Give it a filename
+            link.download = 'my-sketch.png';
+            // 3. Convert canvas to an Image URL
+            link.href = canvas.toDataURL();
+            // 4. "Click" the link in code to start download
+            link.click();
+        };
+
+        // --- 6. BINDING MOUSE EVENTS ---
+        canvas.addEventListener('mousedown', startAction);
+        canvas.addEventListener('mousemove', performDraw);
+        canvas.addEventListener('mouseup', stopAction);
+        canvas.addEventListener('mouseout', stopAction); // Stop if mouse leaves canvas
+
+    </script>
+</body>
+</html>

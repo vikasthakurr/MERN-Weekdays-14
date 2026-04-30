@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .square {
+        width: 150px;
+        height: 150px;
+        margin: 10px;
+        /* background-color: red; */
+        display: inline-block;
+      }
+      .circle {
+        width: 150px;
+        height: 150px;
+        margin: 10px;
+        /* background-color: red; */
+        display: inline-block;
+        border-radius: 50%;
+      }
+      .rectangle {
+        width: 200px;
+        height: 150px;
+        margin: 10px;
+        /* background-color: red; */
+        display: inline-block;
+      }
+      .container {
+        width: 900px;
+        height: 600px;
+        background-color: beige;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="shapeNumber" placeholder="enter the shape number" />
+    <input type="text" id="shapeName" placeholder="enter the shape name" />
+
+    <button id="generate">Generate</button>
+    <div class="container"></div>
+  </body>
+  <script>
+    // Select the button to trigger generation
+    const generate = document.querySelector("#generate");
+    
+    generate.addEventListener("click", (e) => {
+      // Get user inputs
+      const shapeNumber = document.querySelector("#shapeNumber").value;
+      const shapeName = document.querySelector("#shapeName").value;
+
+      // Define an array of available colors
+      const color = ["red", "blue", "green", "yellow", "purple", "orange"];
+      
+      // Calculate a random index based on the color array length
+      // Math.random() gives 0-0.99, multiplying by length and using Math.floor() gives 0 to length-1
+      const randomIndex = Math.floor(Math.random() * color.length);
+      const shapeColor = color[randomIndex];
+
+      // Loop to create and append the shapes
+      for (let i = 0; i < shapeNumber; i++) {
+        // Create the div
+        const shape = document.createElement("div");
+        // Apply the class for the shape type (square, circle, rectangle)
+        shape.classList.add(shapeName);
+        // Apply the randomly selected color
+        shape.style.backgroundColor = shapeColor;
+
+        // Append to the container
+        document.querySelector(".container").appendChild(shape);
+      }
+    });
+  </script>
+</html>

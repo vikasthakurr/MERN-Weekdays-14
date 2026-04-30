@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bootstrap Site</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <input type="text" id="username" class="form-control mb-2" placeholder="Enter GitHub username">
+      <button id="btn" class="btn btn-primary">Get Avatar</button>
+      <div id="result" class="mt-3"></div>
+    </div>
+  </body>
+  <script>
+    // Select the button to trigger the fetch
+    const btn = document.querySelector("#btn");
+
+    // Add a click listener to the button
+    btn.addEventListener("click", (e) => {
+      // Get the value from the username input
+      let username = document.querySelector("#username").value;
+
+      // Use the Fetch API to get data from GitHub
+      // This returns a Promise
+      const response = fetch(`https://api.github.com/users/${username}`);
+      
+      response
+        .then((res) => {
+          // Check if the response is successful
+          if (!res.ok) throw new Error("User not found");
+          return res.json(); // Parse the response body as JSON
+        })
+        .then((data) => {
+          // Create an img element for the user's profile picture
+          const image = document.createElement("img");
+          // Set the source attribute to the avatar URL from the API response
+          image.setAttribute("src", data.avatar_url);
+          image.setAttribute("alt", "User GitHub profile picture");
+          image.classList.add("img-thumbnail"); // Add Bootstrap styling
+
+          // Append the image to the result container
+          document.querySelector("#result").appendChild(image);
+        })
+        .catch((err) => {
+          // Log any errors (e.g., network issues or user not found)
+          console.log("Error:", err.message);
+          alert(err.message);
+        });
+    });
+  </script>
+</html>
