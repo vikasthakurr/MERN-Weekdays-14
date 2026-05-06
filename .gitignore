@@ -1,1 +1,19 @@
-node_modules
+# Node modules
+node_modules/
+dist/
+.vite/
+
+# Logs
+npm-debug.log*
+
+# Env variables
+.env
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
