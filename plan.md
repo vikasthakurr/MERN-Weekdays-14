@@ -131,7 +131,6 @@
 - conditional rendering
 - React Router DOM
 - Link vs Anchor
-- Nested Routes & Params
 - Skelton UI
 - Lazy and Suspense
 - Redux (Global State Management)
