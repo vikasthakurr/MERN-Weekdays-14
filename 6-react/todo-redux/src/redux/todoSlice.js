@@ -13,9 +13,17 @@ export const todoSlice = createSlice({
       state.push(newTodo);
     },
     //TODO
-    removeTodo: () => {},
+    removeTodo: (state, action) => {
+      return state.filter((todo) => todo.id !== action.payload.id);
+    },
     //TODO
-    editTodo: () => {},
+    editTodo: (state, action) => {
+      const { id, text } = action.payload;
+      const todo = state.find((todo) => todo.id === id);
+      if (todo) {
+        todo.text = text;
+      }
+    },
     deleteAll: () => {
       return [];
     },
