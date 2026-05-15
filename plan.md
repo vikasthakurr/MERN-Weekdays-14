@@ -189,8 +189,9 @@
 - Express Router (modular routing)
 - Request validation (`express-validator`, Joi)
 - File uploads with Multer
+- image upload in cloud with cloudinary
 - Logging with Morgan/Winston
-- Sending emails (Nodemailer)
+- Sending emails with nodemailer and emailjs
 
 ### Module 9: MongoDB Basics
 
