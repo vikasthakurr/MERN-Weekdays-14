@@ -15,11 +15,11 @@
  */
 
 import User from "../../models/user.model.js";
-import bcrypt from "bcrypt";
 import asyncHandler from "../../utils/asyncHandler.utils.js";
 import uploadOnCloudinary from "../../utils/cloudinary.utils.js";
 import { sendWelcomeEmail } from "../../config/nodemailer.config.js";
 import ApiError from "../../utils/errorHandler.utils.js";
+import { hashPassword } from "../../utils/password.utils.js";
 
 /** Fallback avatar URL used when Cloudinary upload fails */
 const DEFAULT_PROFILE_IMAGE =
@@ -41,7 +41,7 @@ const registerController = async (req, res) => {
     throw new ApiError(409, "User already exists with this email");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hashPassword(password);
 
   const cloudinaryResponse = await uploadOnCloudinary(DEFAULT_PROFILE_IMAGE);
   const profileImage = cloudinaryResponse

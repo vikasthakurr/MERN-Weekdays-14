@@ -73,8 +73,8 @@ const options = {
       },
     },
   },
-  // Pick up JSDoc @swagger comments from all route files
-  apis: ["./routes/*.js"],
+  // Pick up OpenAPI specifications from all yaml files
+  apis: ["./apidocs/*.yaml"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

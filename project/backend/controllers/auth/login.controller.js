@@ -19,10 +19,10 @@
  */
 
 import User from "../../models/user.model.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import asyncHandler from "../../utils/asyncHandler.utils.js";
 import ApiError from "../../utils/errorHandler.utils.js";
+import { verifyPassword } from "../../utils/password.utils.js";
 
 /**
  * @param {import('express').Request}  req
@@ -41,7 +41,7 @@ const loginController = async (req, res) => {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await verifyPassword(password, user.password);
   if (!isMatch) {
     throw new ApiError(401, "Invalid credentials");
   }
