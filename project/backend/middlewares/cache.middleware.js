@@ -1,10 +1,36 @@
+/**
+ * @file cache.middleware.js
+ * @description Redis-backed HTTP response cache middleware.
+ *
+ * How it works:
+ *  1. On each request, checks Redis for a cached response keyed by the full URL.
+ *  2. Cache HIT  → returns the cached JSON immediately (no DB query).
+ *  3. Cache MISS → monkey-patches res.json to intercept the response,
+ *                  stores it in Redis with the given TTL, then sends it.
+ *
+ * Redis errors are swallowed so a Redis outage never breaks the API.
+ *
+ * Cache key format: "cache:<originalUrl>"
+ * Example:          "cache:/api/v1/products?page=1&category=beauty"
+ */
+
 import { getRedisClient } from "../config/redis.config.js";
 
-const DEFAULT_TTL = 60 * 5; // 5 minutes
+/** Default TTL in seconds (5 minutes) */
+const DEFAULT_TTL = 60 * 5;
 
 /**
- * Cache middleware — uses the full request URL as the cache key.
- * @param {number} ttl  TTL in seconds (default 300)
+ * Returns an Express middleware that caches successful (2xx) responses in Redis.
+ *
+ * @param {number} [ttl=300] - Cache TTL in seconds
+ * @returns {import('express').RequestHandler}
+ *
+ * @example
+ * // Cache for 5 minutes (default)
+ * router.get('/', cache(), getAllProducts);
+ *
+ * // Cache for 10 minutes
+ * router.get('/categories', cache(600), getCategories);
  */
 export function cache(ttl = DEFAULT_TTL) {
   return async (req, res, next) => {
@@ -19,11 +45,11 @@ export function cache(ttl = DEFAULT_TTL) {
       }
       console.log(`[cache MISS] ${key}`);
     } catch (err) {
-      // Redis failure should never break the request — just skip cache
+      // Redis failure must never block the request
       console.error("[cache] Redis read error:", err.message);
     }
 
-    // Monkey-patch res.json so we can intercept and store the response
+    // Intercept res.json to store the response before sending it
     const originalJson = res.json.bind(res);
     res.json = async (body) => {
       if (res.statusCode >= 200 && res.statusCode < 300) {
@@ -41,8 +67,15 @@ export function cache(ttl = DEFAULT_TTL) {
 }
 
 /**
- * Invalidate all cache keys matching a pattern.
- * e.g. invalidateCache("cache:/api/v1/products*")
+ * Deletes all Redis cache keys matching the given glob pattern.
+ * Call this inside write controllers (create / update / delete) to
+ * prevent stale data being served after a mutation.
+ *
+ * @param {string} pattern - Redis key glob pattern
+ * @returns {Promise<void>}
+ *
+ * @example
+ * await invalidateCache("cache:/api/v1/products*");
  */
 export async function invalidateCache(pattern) {
   const redis = getRedisClient();

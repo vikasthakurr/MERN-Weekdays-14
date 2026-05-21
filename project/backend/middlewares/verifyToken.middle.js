@@ -1,9 +1,33 @@
+/**
+ * @file verifyToken.middle.js
+ * @description JWT authentication middleware.
+ *
+ * Accepts the token from two sources (in priority order):
+ *  1. httpOnly cookie named "token" (set by login)
+ *  2. Authorization header: "Bearer <token>"
+ *
+ * On success, attaches the decoded payload to req.user:
+ *  - req.user.id   — MongoDB ObjectId string
+ *  - req.user.role — "user" | "admin"
+ *  - req.user.iat  — issued-at timestamp
+ *  - req.user.exp  — expiry timestamp
+ *
+ * On failure, forwards an ApiError to the global error middleware.
+ */
+
 import jwt from "jsonwebtoken";
 import ApiError from "../utils/errorHandler.utils.js";
 
+/**
+ * Express middleware that verifies the JWT and populates req.user.
+ *
+ * @param {import('express').Request}  req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const verifyToken = (req, res, next) => {
-  // Accept token from Authorization header OR cookie
-  let token =
+  // Prefer cookie; fall back to Authorization header
+  const token =
     req.cookies?.token ||
     (req.headers.authorization?.startsWith("Bearer ")
       ? req.headers.authorization.split(" ")[1]
