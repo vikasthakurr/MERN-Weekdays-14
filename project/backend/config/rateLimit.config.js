@@ -1,15 +1,25 @@
 import rateLimit from "express-rate-limit";
 
-// Limit login attempts to 3 per 60 minutes per IP
-const loginLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 60 minutes
-  max: 3, // limit each IP to 3 requests per windowMs
-  standardHeaders: true, // Return rate limit info in the RateLimit-* headers
-  legacyHeaders: false, // Disable the X-RateLimit-* headers
-  message: { message: "Too many login attempts from this IP, please try again after an hour" },
-  handler: (req, res) => {
-    return res.status(429).json({ message: "Too many login attempts from this IP, please try again after an hour" });
-  },
-});
+const make = (windowMinutes, max, message) =>
+  rateLimit({
+    windowMs: windowMinutes * 60 * 1000,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (_req, res) =>
+      res.status(429).json({ message }),
+  });
+
+// Auth
+export const loginLimiter    = make(60,  5,  "Too many login attempts. Try again after 1 hour.");
+export const registerLimiter = make(60,  10, "Too many registrations from this IP. Try again after 1 hour.");
+
+// Product / resource mutations
+export const createLimiter   = make(15,  20, "Too many create requests. Try again after 15 minutes.");
+export const updateLimiter   = make(15,  30, "Too many update requests. Try again after 15 minutes.");
+export const deleteLimiter   = make(15,  10, "Too many delete requests. Try again after 15 minutes.");
+
+// General read (loose — just a safety net)
+export const readLimiter     = make(1,   100, "Too many requests. Try again after 1 minute.");
 
 export default loginLimiter;

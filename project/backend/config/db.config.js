@@ -1,17 +1,29 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-import dotenv from "dotenv"
-dotenv.config({path:"./env/.env"})
+dotenv.config({ path: "./env/.env" });
 
-const connectDB=async()=>{
-    try {
-        const conn=await mongoose.connect(process.env.MONGO_URI)
-        console.log(`MongoDB Connected: ${conn.connection.host}`)
-    } catch (error) {
-        console.error(`Error: ${error.message}`)
-        process.exit(1)
+const MAX_RETRIES = 5;
+const RETRY_DELAY_MS = 5000;
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const connectDB = async (attempt = 1) => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`MongoDB connection attempt ${attempt}/${MAX_RETRIES} failed: ${error.message}`);
+
+    if (attempt >= MAX_RETRIES) {
+      console.error("Max retries reached. Exiting...");
+      process.exit(1);
     }
-}
-export default connectDB
 
+    console.log(`Retrying in ${RETRY_DELAY_MS / 1000}s...`);
+    await wait(RETRY_DELAY_MS);
+    return connectDB(attempt + 1);
+  }
+};
 
+export default connectDB;

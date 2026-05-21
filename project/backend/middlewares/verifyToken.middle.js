@@ -1,21 +1,28 @@
-const verifyToken=(req,res,next)=>{
-    const authHeader= req.headers.authorization;
+import jwt from "jsonwebtoken";
+import ApiError from "../utils/errorHandler.utils.js";
 
-    if(!authHeader || 
-        !authHeader.startsWith('Bearer ')){
-        return res.status(401).json({msg:'Authentication invalid'})
+const verifyToken = (req, res, next) => {
+  // Accept token from Authorization header OR cookie
+  let token =
+    req.cookies?.token ||
+    (req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.split(" ")[1]
+      : null);
+
+  if (!token) {
+    return next(new ApiError(401, "Access denied. No token provided."));
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // { id, role, iat, exp }
+    next();
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return next(new ApiError(401, "Token has expired. Please log in again."));
     }
+    return next(new ApiError(401, "Invalid token."));
+  }
+};
 
-    const token= authHeader.spilit("",[1])
-    if(!token) return res.status(401).json({message:"token invalid"})
-
-    const isValid= jwt.verify(token,process.env.secreteKey)
-    
-    if(isValid){
-        next()
-    }else{
-        return res.status(403).json({message:"token is not valid"})
-    }
-
-}
-export default verifyToken
+export default verifyToken;
