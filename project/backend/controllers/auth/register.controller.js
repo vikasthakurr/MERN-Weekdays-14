@@ -2,6 +2,7 @@ import User from "../../models/user.model.js";
 import bcrypt from "bcrypt";
 import asyncHandler from "../../utils/asyncHandler.utils.js";
 import uploadOnCloudinary from "../../utils/cloudinary.utils.js";
+import { sendWelcomeEmail } from "../../config/nodemailer.config.js";
 
 const DEFAULT_PROFILE_IMAGE = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -38,6 +39,11 @@ const registerController = async (req, res) => {
         email: newUser.email,
         role: newUser.role,
         profileImage: newUser.profileImage,
+    });
+
+    // send welcome email asynchronously; don't block response
+    sendWelcomeEmail(newUser.email, newUser.name).catch((err) => {
+        console.error("Failed to send welcome email:", err.message || err);
     });
 };
 

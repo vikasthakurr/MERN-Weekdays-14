@@ -3,7 +3,7 @@ import transporter from "../config/nodemailer.config.js";
 async function sendEmail(to, subject, htmlContent) {
   try {
     await transporter.sendMail({
-      from: `"${process.env.APP_NAME}" <${process.env.EMAIL_HOST_USER}>`,
+      from: `"${process.env.FROM_NAME || "MERN App"}" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html: htmlContent,
