@@ -43,10 +43,12 @@ const registerController = async (req, res) => {
 
   const hashedPassword = await hashPassword(password);
 
-  const cloudinaryResponse = await uploadOnCloudinary(DEFAULT_PROFILE_IMAGE);
-  const profileImage = cloudinaryResponse
-    ? cloudinaryResponse.secure_url
-    : DEFAULT_PROFILE_IMAGE;
+  // Use uploaded avatar if provided, otherwise fall back to default
+  let profileImage = DEFAULT_PROFILE_IMAGE;
+  if (req.file?.path) {
+    const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
+    if (cloudinaryResponse) profileImage = cloudinaryResponse.secure_url;
+  }
 
   const newUser = await User.create({
     name,

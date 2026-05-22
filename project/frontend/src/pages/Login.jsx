@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Mail, Lock, AlertCircle, ShieldCheck } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/authSlice";
+import api from "../utils/api";
 import toast from "react-hot-toast";
 
 const GoogleIcon = () => (
@@ -23,33 +24,46 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Dummy credential check
-  const DUMMY_USERS = [
-    { email: "admin@example.com",   password: "admin123",  name: "Admin User",  role: "admin", avatar: "" },
-    { email: "user@example.com",    password: "user123",   name: "Test User",   role: "user",  avatar: "" },
-  ];
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600)); // simulate network
-    const match = DUMMY_USERS.find((u) => u.email === email && u.password === password);
-    if (!match) {
-      setError("Invalid email or password.");
+    try {
+      const { data } = await api.post("/auth/login", { email, password });
+      dispatch(loginUser({
+        name:   data.name,
+        email:  data.email,
+        role:   data.role,
+        avatar: data.profileImage ?? "",
+        _id:    data._id,
+      }));
+      toast.success(`Welcome back, ${data.name.split(" ")[0]}!`);
+      navigate(data.role === "admin" ? "/admin" : "/");
+    } catch (err) {
+      setError(err.response?.data?.message ?? "Invalid email or password.");
+    } finally {
       setLoading(false);
-      return;
     }
-    dispatch(loginUser({ name: match.name, email: match.email, role: match.role, avatar: match.avatar }));
-    toast.success(`Welcome back, ${match.name.split(" ")[0]}!`);
-    navigate(match.role === "admin" ? "/admin" : "/");
-    setLoading(false);
   };
 
-  const handleAdminQuick = () => {
-    dispatch(loginUser({ name: "Admin User", email: "admin@example.com", role: "admin", avatar: "" }));
-    toast.success("Entered as Admin");
-    navigate("/admin");
+  const handleAdminQuick = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.post("/auth/login", {
+        email: "admin@example.com",
+        password: "admin123",
+      });
+      dispatch(loginUser({ name: data.name, email: data.email, role: data.role, avatar: data.profileImage ?? "", _id: data._id }));
+      toast.success("Entered as Admin");
+      navigate("/admin");
+    } catch {
+      // fallback: set dummy admin if backend not running
+      dispatch(loginUser({ name: "Admin User", email: "admin@example.com", role: "admin", avatar: "" }));
+      toast.success("Entered as Admin (offline)");
+      navigate("/admin");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -63,7 +63,10 @@ const loginController = async (req, res) => {
     maxAge:   cookieDays * 24 * 60 * 60 * 1000,
   });
 
+  // Also return token in body so frontend can store it in localStorage
+  // (needed when cookies are blocked or for Bearer auth on API calls)
   res.status(200).json({
+    token,
     _id:          user._id,
     name:         user.name,
     email:        user.email,

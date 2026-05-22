@@ -1,18 +1,11 @@
-import { useState } from "react";
-import { Plus, Pencil, Trash2, X, Check, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Pencil, Trash2, X, Search, Loader2 } from "lucide-react";
+import api from "../../utils/api";
 import toast from "react-hot-toast";
-
-const DUMMY_USERS = Array.from({ length: 20 }, (_, i) => ({
-  _id: String(i + 1),
-  name: `User ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  role: i === 0 ? "admin" : "user",
-  joined: new Date(Date.now() - i * 86400000 * 10).toLocaleDateString(),
-}));
 
 const EMPTY_FORM = { name: "", email: "", role: "user" };
 
-function Modal({ title, data, onChange, onSave, onClose }) {
+function Modal({ title, data, onChange, onSave, onClose, saving }) {
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl">
@@ -22,7 +15,7 @@ function Modal({ title, data, onChange, onSave, onClose }) {
         </div>
         <div className="p-6 space-y-4">
           {[
-            { key: "name",  label: "Name",  type: "text",  placeholder: "Full name"       },
+            { key: "name",  label: "Name",  type: "text",  placeholder: "Full name"        },
             { key: "email", label: "Email", type: "email", placeholder: "user@example.com" },
           ].map(({ key, label, type, placeholder }) => (
             <div key={key}>
@@ -42,13 +35,13 @@ function Modal({ title, data, onChange, onSave, onClose }) {
           </div>
         </div>
         <div className="flex gap-3 px-6 pb-6">
-          <button onClick={onClose}
+          <button onClick={onClose} disabled={saving}
             className="flex-1 border border-[#E8E8E8] text-[#717171] py-2.5 rounded-xl text-sm font-semibold hover:border-[#1A1A1A] hover:text-[#1A1A1A] transition-colors">
             Cancel
           </button>
-          <button onClick={onSave}
-            className="flex-1 bg-[#1A1A1A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-black/80 transition-colors">
-            Save
+          <button onClick={onSave} disabled={saving}
+            className="flex-1 bg-[#1A1A1A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-black/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+            {saving && <Loader2 size={14} className="animate-spin" />} Save
           </button>
         </div>
       </div>
@@ -57,46 +50,70 @@ function Modal({ title, data, onChange, onSave, onClose }) {
 }
 
 export default function Users() {
-  const [users,  setUsers]  = useState(DUMMY_USERS);
+  const [users,  setUsers]  = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [modal,  setModal]  = useState(null);
   const [form,   setForm]   = useState(EMPTY_FORM);
   const [editId, setEditId] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  const fetchUsers = async () => {
+    try {
+      const { data } = await api.get("/admin/users?limit=100");
+      setUsers(data.users ?? data.data ?? []);
+    } catch {
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchUsers(); }, []);
 
   const filtered = users.filter((u) =>
-    u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.email.toLowerCase().includes(search.toLowerCase())
+    u.name?.toLowerCase().includes(search.toLowerCase()) ||
+    u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
   const openAdd  = () => { setForm(EMPTY_FORM); setModal("add"); };
   const openEdit = (u) => { setForm({ name: u.name, email: u.email, role: u.role }); setEditId(u._id); setModal("edit"); };
   const closeModal = () => { setModal(null); setEditId(null); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim() || !form.email.trim()) { toast.error("Name and email are required"); return; }
-    if (modal === "add") {
-      setUsers((u) => [{ ...form, _id: Date.now().toString(), joined: new Date().toLocaleDateString() }, ...u]);
-      toast.success("User added");
-    } else {
-      setUsers((u) => u.map((x) => x._id === editId ? { ...x, ...form } : x));
-      toast.success("User updated");
+    setSaving(true);
+    try {
+      if (modal === "edit") {
+        const { data } = await api.patch(`/admin/users/${editId}`, { name: form.name, email: form.email, role: form.role });
+        setUsers((u) => u.map((x) => x._id === editId ? { ...x, ...data } : x));
+        toast.success("User updated");
+      } else {
+        toast("User creation requires registration endpoint");
+      }
+      closeModal();
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Save failed");
+    } finally {
+      setSaving(false);
     }
-    closeModal();
   };
 
-  const handleDelete = (id) => {
-    setUsers((u) => u.filter((x) => x._id !== id));
-    toast.success("User deleted");
+  const handleDelete = async (id) => {
+    if (!confirm("Delete this user?")) return;
+    try {
+      await api.delete(`/admin/users/${id}`);
+      setUsers((u) => u.filter((x) => x._id !== id));
+      toast.success("User deleted");
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Delete failed");
+    }
   };
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-xl font-bold text-[#1A1A1A]">All Users</h1>
-        <button onClick={openAdd}
-          className="bg-[#1A1A1A] text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-black/80 transition-colors">
-          <Plus size={15} /> Add User
-        </button>
       </div>
 
       <div className="relative">
@@ -107,50 +124,55 @@ export default function Users() {
       </div>
 
       <div className="bg-white rounded-2xl border border-[#E8E8E8] overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-[#F6F6F6] border-b border-[#E8E8E8]">
-                {["Name", "Email", "Role", "Joined", "Actions"].map((h) => (
-                  <th key={h} className="text-left px-5 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((u) => (
-                <tr key={u._id} className="border-b border-[#E8E8E8] hover:bg-[#F6F6F6] transition-colors">
-                  <td className="px-5 py-3 font-medium text-[#1A1A1A]">{u.name}</td>
-                  <td className="px-5 py-3 text-[#717171]">{u.email}</td>
-                  <td className="px-5 py-3">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize
-                      ${u.role === "admin" ? "bg-purple-50 text-purple-600" : "bg-gray-100 text-[#717171]"}`}>
-                      {u.role}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3 text-[#717171] whitespace-nowrap">{u.joined}</td>
-                  <td className="px-5 py-3">
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => openEdit(u)} className="text-[#717171] hover:text-[#1A1A1A] p-1 transition-colors"><Pencil size={15} /></button>
-                      <button onClick={() => handleDelete(u._id)} className="text-[#717171] hover:text-red-500 p-1 transition-colors"><Trash2 size={15} /></button>
-                    </div>
-                  </td>
+        {loading ? (
+          <div className="flex items-center justify-center py-16"><Loader2 size={24} className="animate-spin text-[#717171]" /></div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[#F6F6F6] border-b border-[#E8E8E8]">
+                  {["Name", "Email", "Role", "Joined", "Actions"].map((h) => (
+                    <th key={h} className="text-left px-5 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {filtered.length === 0 && (
-            <p className="text-center text-[#717171] text-sm py-10">No users found</p>
-          )}
-        </div>
+              </thead>
+              <tbody>
+                {filtered.map((u) => (
+                  <tr key={u._id} className="border-b border-[#E8E8E8] hover:bg-[#F6F6F6] transition-colors">
+                    <td className="px-5 py-3 font-medium text-[#1A1A1A]">{u.name}</td>
+                    <td className="px-5 py-3 text-[#717171]">{u.email}</td>
+                    <td className="px-5 py-3">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize
+                        ${u.role === "admin" ? "bg-purple-50 text-purple-600" : "bg-gray-100 text-[#717171]"}`}>
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-[#717171] whitespace-nowrap">
+                      {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"}
+                    </td>
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => openEdit(u)} className="text-[#717171] hover:text-[#1A1A1A] p-1 transition-colors"><Pencil size={15} /></button>
+                        <button onClick={() => handleDelete(u._id)} className="text-[#717171] hover:text-red-500 p-1 transition-colors"><Trash2 size={15} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filtered.length === 0 && <p className="text-center text-[#717171] text-sm py-10">No users found</p>}
+          </div>
+        )}
       </div>
 
       {modal && (
         <Modal
-          title={modal === "add" ? "Add User" : "Edit User"}
+          title="Edit User"
           data={form}
           onChange={(k, v) => setForm((f) => ({ ...f, [k]: v }))}
           onSave={handleSave}
           onClose={closeModal}
+          saving={saving}
         />
       )}
     </div>

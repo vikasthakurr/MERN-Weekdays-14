@@ -2,6 +2,9 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, User, Camera, X } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/authSlice";
+import api from "../utils/api";
 import toast from "react-hot-toast";
 
 const GoogleIcon = () => (
@@ -15,11 +18,13 @@ const GoogleIcon = () => (
 
 const Signup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const imgRef   = useRef(null);
-  const [form, setForm]         = useState({ username: "", email: "", password: "" });
+  const [form, setForm]             = useState({ username: "", email: "", password: "" });
   const [avatarFile, setAvatarFile] = useState(null);
-  const [preview, setPreview]   = useState(null);
-  const [loading, setLoading]   = useState(false);
+  const [preview, setPreview]       = useState(null);
+  const [loading, setLoading]       = useState(false);
+  const [error, setError]           = useState("");
 
   const handle = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -32,12 +37,23 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
     try {
+      const formData = new FormData();
+      formData.append("name",     form.username);
+      formData.append("email",    form.email);
+      formData.append("password", form.password);
+      if (avatarFile) formData.append("avatar", avatarFile);
+
+      await api.post("/auth/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       toast.success("Account created! Please sign in.");
       navigate("/login");
     } catch (err) {
-      toast.error("Registration failed");
+      setError(err.response?.data?.message ?? "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -54,6 +70,11 @@ const Signup = () => {
         </div>
 
         <div className="px-8 py-6 space-y-5">
+          {error && (
+            <div className="bg-red-50 border border-red-100 text-red-600 p-3 rounded-xl flex items-center gap-2 text-sm">
+              {error}
+            </div>
+          )}
           {/* Avatar */}
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">

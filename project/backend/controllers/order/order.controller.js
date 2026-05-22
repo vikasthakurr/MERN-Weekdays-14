@@ -26,14 +26,22 @@ export const createOrder = asyncHandler(async (req, res) => {
   if (!shippingAddress) throw new ApiError(400, "Shipping address is required");
   if (!payment?.method) throw new ApiError(400, "Payment method is required");
 
-  const products = await Product.find({ _id: { $in: items.map((i) => i.product) } }).lean();
-  if (products.length !== items.length) throw new ApiError(400, "One or more products not found");
+  // Support both real MongoDB ObjectIds and dummyId (numeric string from static JSON)
+  const isObjectId = (id) => /^[a-f\d]{24}$/i.test(id);
 
-  const productMap = Object.fromEntries(products.map((p) => [p._id.toString(), p]));
+  const products = await Promise.all(
+    items.map((i) =>
+      isObjectId(i.product)
+        ? Product.findById(i.product).lean()
+        : Product.findOne({ dummyId: Number(i.product) }).lean()
+    )
+  );
 
-  const orderItems = items.map((item) => {
-    const product = productMap[item.product];
-    if (!product) throw new ApiError(404, `Product ${item.product} not found`);
+  const missing = products.findIndex((p) => !p);
+  if (missing !== -1) throw new ApiError(400, `Product "${items[missing].product}" not found`);
+
+  const orderItems = items.map((item, idx) => {
+    const product = products[idx];
     if (product.stock < item.quantity) {
       throw new ApiError(400, `Insufficient stock for "${product.title}"`);
     }

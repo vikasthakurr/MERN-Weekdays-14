@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, CreditCard, CheckCircle, ChevronRight, ArrowLeft, ShoppingBag, Loader2 } from "lucide-react";
 import { selectCartItems, selectCartTotal, clearCart } from "../redux/cartSlice";
+import { selectUser } from "../redux/authSlice";
+import api from "../utils/api";
 import toast from "react-hot-toast";
 
 // ── Step config ───────────────────────────────────────────────────────────────
@@ -284,11 +286,21 @@ const Checkout = () => {
   const navigate = useNavigate();
   const items    = useSelector(selectCartItems);
   const total    = useSelector(selectCartTotal);
+  const user     = useSelector(selectUser);
 
-  const [step, setStep]           = useState(1);
-  const [address, setAddress]     = useState({});
-  const [method, setMethod]       = useState("");
+  const [step, setStep]             = useState(1);
+  const [address, setAddress]       = useState({
+    fullName:   "John Doe",
+    phone:      "+1 234 567 8900",
+    street:     "123 Main Street",
+    city:       "New York",
+    state:      "NY",
+    postalCode: "10001",
+    country:    "United States",
+  });
+  const [method, setMethod]         = useState("");
   const [processing, setProcessing] = useState(false);
+  const [placedOrder, setPlacedOrder] = useState(null);
 
   // Redirect if cart is empty
   if (items.length === 0) {
@@ -311,12 +323,73 @@ const Checkout = () => {
   const handleAddressChange = (field, value) =>
     setAddress((prev) => ({ ...prev, [field]: value }));
 
-  const handlePlaceOrder = () => setProcessing(true);
+  // Build order payload matching backend schema
+  const buildOrderPayload = () => ({
+    items: items.map((i) => ({ product: i._id, quantity: i.quantity })),
+    shippingAddress: {
+      fullName:   address.fullName,
+      phone:      address.phone,
+      street:     address.street,
+      city:       address.city,
+      state:      address.state ?? "",
+      postalCode: address.postalCode,
+      country:    address.country,
+    },
+    payment: { method },
+  });
+
+  // Launch Razorpay checkout in browser
+  const launchRazorpay = (rzpOrder) => {
+    return new Promise((resolve, reject) => {
+      const options = {
+        key:         import.meta.env.VITE_RAZORPAY_KEY_ID ?? rzpOrder.key_id,
+        amount:      rzpOrder.amount,
+        currency:    rzpOrder.currency,
+        name:        "Commerce",
+        description: "Order Payment",
+        order_id:    rzpOrder.id,
+        prefill: {
+          name:  user?.name  ?? "",
+          email: user?.email ?? "",
+        },
+        handler: (response) => resolve(response),
+        modal: { ondismiss: () => reject(new Error("Payment cancelled")) },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    });
+  };
+
+  const handlePlaceOrder = async () => {
+    let createdOrder = null;
+    try {
+      if (method === "razorpay") {
+        const { data: rzpOrder } = await api.post("/orders/razorpay/create", { amount: Math.round(total) });
+        const payment = await launchRazorpay(rzpOrder);
+        await api.post("/orders/razorpay/verify", {
+          razorpay_order_id:   payment.razorpay_order_id,
+          razorpay_payment_id: payment.razorpay_payment_id,
+          razorpay_signature:  payment.razorpay_signature,
+        });
+        const { data } = await api.post("/orders", buildOrderPayload());
+        createdOrder = data;
+      } else {
+        const { data } = await api.post("/orders", buildOrderPayload());
+        createdOrder = data;
+      }
+    } catch (err) {
+      console.warn("Order API error:", err.response?.data?.message ?? err.message);
+      toast.error(err.response?.data?.message ?? "Order could not be saved. Showing demo flow.");
+    }
+    // Set placed order first, then show overlay
+    setPlacedOrder(createdOrder);
+    setProcessing(true);
+  };
 
   const handlePaymentDone = () => {
     dispatch(clearCart());
     toast.success("Order placed successfully!");
-    navigate("/");
+    navigate("/orders", { state: { newOrder: placedOrder } });
   };
 
   return (
@@ -360,7 +433,8 @@ const Checkout = () => {
               <ConfirmStep
                 address={address} method={method}
                 items={items} total={total}
-                onBack={() => setStep(2)} onPlace={handlePlaceOrder}
+                onBack={() => setStep(2)}
+                onPlace={handlePlaceOrder}
               />
             </motion.div>
           )}

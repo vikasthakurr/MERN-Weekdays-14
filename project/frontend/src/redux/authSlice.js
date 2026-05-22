@@ -8,9 +8,14 @@ const authSlice = createSlice({
   reducers: {
     loginUser: (state, action) => {
       state.user = action.payload;
+      // Persist token for Bearer auth on API calls
+      if (action.payload.token) {
+        localStorage.setItem("token", action.payload.token);
+      }
     },
     logoutUser: (state) => {
       state.user = null;
+      localStorage.removeItem("token");
     },
     updateUser: (state, action) => {
       if (state.user) state.user = { ...state.user, ...action.payload };
