@@ -20,6 +20,7 @@ import uploadOnCloudinary from "../../utils/cloudinary.utils.js";
 import { sendWelcomeEmail } from "../../config/nodemailer.config.js";
 import ApiError from "../../utils/errorHandler.utils.js";
 import { hashPassword } from "../../utils/password.utils.js";
+import jwt from "jsonwebtoken";
 
 /** Fallback avatar URL used when Cloudinary upload fails */
 const DEFAULT_PROFILE_IMAGE =
@@ -59,7 +60,22 @@ const registerController = async (req, res) => {
   });
 
   // Respond before sending email so the client isn't blocked
+  const token = jwt.sign(
+    { id: newUser._id, role: newUser.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
+  );
+
+  const cookieDays = parseInt(process.env.COOKIE_EXPIRES_IN, 10) || 1;
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure:   process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge:   cookieDays * 24 * 60 * 60 * 1000,
+  });
+
   res.status(201).json({
+    token,
     _id:          newUser._id,
     name:         newUser.name,
     email:        newUser.email,

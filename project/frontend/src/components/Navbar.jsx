@@ -1,11 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingBag, User, Menu, Search, ChevronDown, X, Star, LogOut, ShoppingCart, UserCircle, ShieldCheck } from "lucide-react";
+import { ShoppingBag, User, Menu, Search, ChevronDown, X, Star, LogOut, ShoppingCart, UserCircle, ShieldCheck, Sun, Moon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearch } from "../context/Searchcontext";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCartCount } from "../redux/cartSlice";
 import { selectUser, logoutUser } from "../redux/authSlice";
+import { selectDark, toggleTheme } from "../redux/themeSlice";
 import ProductModal from "./ProductModal";
 import toast from "react-hot-toast";
 
@@ -17,6 +18,7 @@ const Navbar = () => {
   const { query, setQuery, results, clearSearch } = useSearch();
   const cartCount   = useSelector(selectCartCount);
   const user        = useSelector(selectUser);
+  const dark        = useSelector(selectDark);
 
   const [mobileOpen,   setMobileOpen]   = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -69,18 +71,18 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-white border-b border-[#E8E8E8] sticky top-0 z-50">
+      <nav className="bg-[var(--card)] border-b border-[var(--border)] sticky top-0 z-50">
         <div className="max-w-[1320px] mx-auto px-6 h-16 flex items-center gap-6">
 
-          <Link to="/" className="text-[#1A1A1A] text-xl font-bold tracking-tight flex-shrink-0">
+          <Link to="/" className="text-[var(--text)] text-xl font-bold tracking-tight flex-shrink-0">
             Commerce
           </Link>
 
           {/* Search — desktop */}
           <form onSubmit={handleSubmit} ref={searchRef}
             className="flex-grow max-w-2xl relative hidden md:block">
-            <div className={`flex items-center border rounded-full bg-[#F6F6F6] transition-colors overflow-hidden
-              ${dropdownOpen && query ? "border-[#1A1A1A]" : "border-[#E8E8E8] hover:border-[#1A1A1A]"}`}>
+            <div className={`flex items-center border rounded-full bg-[var(--input)] transition-colors overflow-hidden
+              ${dropdownOpen && query ? "border-[var(--text)]" : "border-[var(--border)] hover:border-[var(--text)]"}`}>
               <button type="button"
                 className="flex items-center gap-1 px-4 py-2.5 text-sm font-medium text-[#1A1A1A] border-r border-[#E8E8E8] whitespace-nowrap hover:bg-gray-100 transition-colors">
                 All categories <ChevronDown size={14} />
@@ -112,7 +114,7 @@ const Navbar = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-[#E8E8E8] shadow-xl overflow-hidden z-50"
+                  className="absolute top-full left-0 right-0 mt-2 bg-[var(--card)] rounded-2xl border border-[var(--border)] shadow-xl overflow-hidden z-50"
                 >
                   {/* Header */}
                   <div className="px-4 py-2.5 border-b border-[#E8E8E8] flex items-center justify-between">
@@ -243,6 +245,17 @@ const Navbar = () => {
                 <span className="hidden lg:block">Sign In</span>
               </Link>
             )}
+
+            <button
+              onClick={() => dispatch(toggleTheme())}
+              className="p-2 rounded-full hover:bg-gray-50 dark:hover:bg-[#2A2A2A] transition-colors"
+              aria-label="Toggle theme"
+            >
+              {dark
+                ? <Sun  size={20} className="text-[#F5A623]" />
+                : <Moon size={20} className="text-[#1A1A1A]" />
+              }
+            </button>
 
             <Link to="/cart"
               className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-50 transition-colors relative">

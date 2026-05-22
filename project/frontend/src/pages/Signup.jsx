@@ -46,12 +46,26 @@ const Signup = () => {
       formData.append("password", form.password);
       if (avatarFile) formData.append("avatar", avatarFile);
 
-      await api.post("/auth/register", formData, {
+      const { data } = await api.post("/auth/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Account created! Please sign in.");
-      navigate("/login");
+      // Auto-login if register returns a token
+      if (data.token) {
+        dispatch(loginUser({
+          name:   data.name,
+          email:  data.email,
+          role:   data.role,
+          avatar: data.profileImage ?? "",
+          _id:    data._id,
+          token:  data.token,
+        }));
+        toast.success(`Welcome, ${data.name.split(" ")[0]}!`);
+        navigate("/");
+      } else {
+        toast.success("Account created! Please sign in.");
+        navigate("/login");
+      }
     } catch (err) {
       setError(err.response?.data?.message ?? "Registration failed. Please try again.");
     } finally {

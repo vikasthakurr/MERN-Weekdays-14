@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { PrivateRoute } from "./components/ProtectedRoute";
+import { PrivateRoute, AdminRoute } from "./components/ProtectedRoute";
 
 // Layouts
 import Navbar from "./components/Navbar";
@@ -24,12 +24,12 @@ function App() {
     <Router>
       <Routes>
         {/* Admin — standalone, no Navbar/Footer */}
-        <Route path="/admin/*" element={<AdminPage />} />
+        <Route path="/admin/*" element={<AdminRoute><AdminPage /></AdminRoute>} />
 
         <Route
           path="/*"
           element={
-            <div className="min-h-screen bg-[#F6F6F6] text-[#1A1A1A] font-sans flex flex-col">
+            <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans flex flex-col">
               <Navbar />
               <main className="flex-grow pb-16 lg:pb-0">
                 <Routes>

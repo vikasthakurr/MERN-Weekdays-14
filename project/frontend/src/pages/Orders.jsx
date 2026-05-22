@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Package, CheckCircle, ChevronDown, ChevronUp, ShoppingBag, Truck, RotateCcw } from "lucide-react";
+import { Package, CheckCircle, ChevronDown, ChevronUp, ShoppingBag, Truck } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import api from "../utils/api";
 import toast from "react-hot-toast";

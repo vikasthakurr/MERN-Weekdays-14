@@ -378,10 +378,11 @@ const Checkout = () => {
         createdOrder = data;
       }
     } catch (err) {
-      console.warn("Order API error:", err.response?.data?.message ?? err.message);
-      toast.error(err.response?.data?.message ?? "Order could not be saved. Showing demo flow.");
+      const msg = err.response?.data?.message ?? err.message ?? "Order failed";
+      toast.error(msg);
+      return; // stop here — don't show success overlay if order wasn't saved
     }
-    // Set placed order first, then show overlay
+    // Only reach here on success
     setPlacedOrder(createdOrder);
     setProcessing(true);
   };

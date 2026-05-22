@@ -1,8 +1,9 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
 import { persistStore, persistReducer } from "redux-persist";
-import cartReducer from "./cartSlice";
-import authReducer from "./authSlice";
+import cartReducer  from "./cartSlice";
+import authReducer  from "./authSlice";
+import themeReducer from "./themeSlice";
 
 // Direct localStorage storage engine (avoids ESM resolution issues with redux-persist/lib/storage)
 const localStorageEngine = {
@@ -14,12 +15,13 @@ const localStorageEngine = {
 const persistConfig = {
   key: "root",
   storage: localStorageEngine,
-  whitelist: ["cart", "auth"],
+  whitelist: ["cart", "auth", "theme"],
 };
 
 const rootReducer = combineReducers({
-  cart: cartReducer,
-  auth: authReducer,
+  cart:  cartReducer,
+  auth:  authReducer,
+  theme: themeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
