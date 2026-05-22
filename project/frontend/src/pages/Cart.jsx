@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { increase, decrease, removeItem, clearCart, selectCartItems, selectCartTotal } from "../redux/cartSlice";
 
 const Cart = () => {
-  const dispatch = () => {};
-  const items    = [];
-  const total    = 0;
+  const dispatch = useDispatch();
+  const items    = useSelector(selectCartItems);
+  const total    = useSelector(selectCartTotal);
   const navigate = useNavigate();
 
   if (items.length === 0) {

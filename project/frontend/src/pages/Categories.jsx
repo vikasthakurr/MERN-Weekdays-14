@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ShoppingBag, Plus, Minus, SlidersHorizontal, X, Heart, ChevronRight } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, increase, decrease, selectCartItem } from "../redux/cartSlice";
 import FilterSidebar, { SORT_OPTIONS } from "../components/FilterSidebar";
 import toast from "react-hot-toast";
 import rawProducts from "../data/products.json";
@@ -35,8 +37,8 @@ const CardSkeleton = () => (
 
 // ── Product card ──────────────────────────────────────────────────────────────
 const ProductCard = ({ product }) => {
-  const dispatch = () => {};
-  const cartItem = null;
+  const dispatch = useDispatch();
+  const cartItem = useSelector(selectCartItem(product._id));
   const rating   = product.rating ?? 0;
   const isOnSale = product.price > 100;
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, AlertCircle, ShieldCheck } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/authSlice";
 import toast from "react-hot-toast";
 
 const GoogleIcon = () => (
@@ -14,15 +16,40 @@ const GoogleIcon = () => (
 );
 
 const Login = () => {
-  const [email, setEmail]     = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]     = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate  = useNavigate();
+  const [error, setError]       = useState("");
+  const [loading, setLoading]   = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Dummy credential check
+  const DUMMY_USERS = [
+    { email: "admin@example.com",   password: "admin123",  name: "Admin User",  role: "admin", avatar: "" },
+    { email: "user@example.com",    password: "user123",   name: "Test User",   role: "user",  avatar: "" },
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("Login not available — auth context removed.");
+    setError("");
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 600)); // simulate network
+    const match = DUMMY_USERS.find((u) => u.email === email && u.password === password);
+    if (!match) {
+      setError("Invalid email or password.");
+      setLoading(false);
+      return;
+    }
+    dispatch(loginUser({ name: match.name, email: match.email, role: match.role, avatar: match.avatar }));
+    toast.success(`Welcome back, ${match.name.split(" ")[0]}!`);
+    navigate(match.role === "admin" ? "/admin" : "/");
+    setLoading(false);
+  };
+
+  const handleAdminQuick = () => {
+    dispatch(loginUser({ name: "Admin User", email: "admin@example.com", role: "admin", avatar: "" }));
+    toast.success("Entered as Admin");
+    navigate("/admin");
   };
 
   return (
@@ -49,7 +76,7 @@ const Login = () => {
 
           <button
             type="button"
-            onClick={() => { navigate("/admin"); toast.success("Entered as Admin"); }}
+            onClick={handleAdminQuick}
             className="w-full flex items-center justify-center gap-2 bg-[#1A1A1A] text-white py-3 rounded-full text-sm font-semibold hover:bg-black/80 transition-colors"
           >
             <ShieldCheck size={16} /> Continue as Admin

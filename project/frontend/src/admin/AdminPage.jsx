@@ -1,98 +1,111 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ShieldCheck, Users, Package, ShoppingBag, ArrowLeft } from "lucide-react";
-import rawProducts from "../data/products.json";
+import {
+  LayoutDashboard, Tag, Package, ShoppingCart,
+  Users, ArrowLeft, Menu, X, ShieldCheck, UserCircle,
+} from "lucide-react";
 
-const ALL_PRODUCTS = rawProducts.products.map((p) => ({
-  _id: String(p.id),
-  name: p.title,
-  image: p.thumbnail,
-  price: p.price,
-  category: p.category,
-  rating: p.rating,
-  stock: p.stock,
-}));
+import Dashboard    from "./sections/Dashboard";
+import Categories   from "./sections/Categories";
+import Products     from "./sections/Products";
+import Orders       from "./sections/Orders";
+import UsersSection from "./sections/Users";
+import AdminProfile from "./sections/AdminProfile";
 
-const stats = [
-  { label: "Total Products", value: ALL_PRODUCTS.length, icon: Package, color: "bg-blue-50 text-blue-600" },
-  { label: "Categories",     value: [...new Set(ALL_PRODUCTS.map((p) => p.category))].length, icon: ShoppingBag, color: "bg-purple-50 text-purple-600" },
-  { label: "In Stock",       value: ALL_PRODUCTS.filter((p) => p.stock > 0).length, icon: ShieldCheck, color: "bg-green-50 text-green-600" },
-  { label: "Low Stock",      value: ALL_PRODUCTS.filter((p) => p.stock > 0 && p.stock <= 10).length, icon: Users, color: "bg-orange-50 text-orange-600" },
+const NAV = [
+  { id: "dashboard",  label: "Dashboard",  icon: LayoutDashboard },
+  { id: "categories", label: "Categories", icon: Tag             },
+  { id: "products",   label: "Products",   icon: Package         },
+  { id: "orders",     label: "Orders",     icon: ShoppingCart    },
+  { id: "users",      label: "Users",      icon: Users           },
+  { id: "profile",    label: "Profile",    icon: UserCircle      },
 ];
 
-const AdminPage = () => (
-  <div className="min-h-screen bg-[#F6F6F6]">
-    {/* Header */}
-    <div className="bg-white border-b border-[#E8E8E8] px-6 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+const SECTION = {
+  dashboard:  <Dashboard />,
+  categories: <Categories />,
+  products:   <Products />,
+  orders:     <Orders />,
+  users:      <UsersSection />,
+  profile:    <AdminProfile />,
+};
+
+export default function AdminPage() {
+  const [active,      setActive]      = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleNav = (id) => { setActive(id); setSidebarOpen(false); };
+
+  const Sidebar = () => (
+    <aside className="flex flex-col h-full bg-white border-r border-[#E8E8E8] w-56">
+      {/* Logo */}
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#E8E8E8]">
         <ShieldCheck size={20} className="text-[#1A1A1A]" />
         <span className="font-bold text-[#1A1A1A]">Admin Panel</span>
       </div>
-      <Link to="/" className="flex items-center gap-1.5 text-sm text-[#717171] hover:text-[#1A1A1A] transition-colors">
-        <ArrowLeft size={14} /> Back to Store
-      </Link>
-    </div>
 
-    <div className="max-w-[1320px] mx-auto px-6 py-8 space-y-8">
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-white rounded-2xl border border-[#E8E8E8] p-5 flex items-center gap-4">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
-              <Icon size={18} />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-[#1A1A1A]">{value}</p>
-              <p className="text-xs text-[#717171]">{label}</p>
-            </div>
-          </div>
+      {/* Nav links */}
+      <nav className="flex-1 py-4 space-y-0.5 px-3">
+        {NAV.map(({ id, label, icon: Icon }) => (
+          <button key={id} onClick={() => handleNav(id)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+              ${active === id
+                ? "bg-[#1A1A1A] text-white"
+                : "text-[#717171] hover:bg-[#F6F6F6] hover:text-[#1A1A1A]"}`}
+          >
+            <Icon size={17} />
+            {label}
+          </button>
         ))}
+      </nav>
+
+      {/* Back to store */}
+      <div className="px-5 py-4 border-t border-[#E8E8E8]">
+        <Link to="/"
+          className="flex items-center gap-2 text-sm text-[#717171] hover:text-[#1A1A1A] transition-colors font-medium">
+          <ArrowLeft size={15} /> Back to Store
+        </Link>
+      </div>
+    </aside>
+  );
+
+  return (
+    <div className="flex h-screen bg-[#F6F6F6] overflow-hidden">
+
+      {/* Desktop sidebar */}
+      <div className="hidden lg:flex flex-col h-full shrink-0">
+        <Sidebar />
       </div>
 
-      {/* Products table */}
-      <div className="bg-white rounded-2xl border border-[#E8E8E8] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#E8E8E8]">
-          <h2 className="font-bold text-[#1A1A1A]">All Products</h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[#E8E8E8] bg-[#F6F6F6]">
-                <th className="text-left px-6 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">Product</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">Category</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">Price</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">Stock</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-[#717171] uppercase tracking-wider">Rating</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ALL_PRODUCTS.map((p) => (
-                <tr key={p._id} className="border-b border-[#E8E8E8] hover:bg-[#F6F6F6] transition-colors">
-                  <td className="px-6 py-3">
-                    <div className="flex items-center gap-3">
-                      <img src={p.image} alt={p.name} className="w-9 h-9 rounded-xl object-cover bg-[#F6F6F6]" />
-                      <span className="font-medium text-[#1A1A1A] line-clamp-1">{p.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-3 capitalize text-[#717171]">{p.category}</td>
-                  <td className="px-6 py-3 font-semibold text-[#1A1A1A]">${p.price}</td>
-                  <td className="px-6 py-3">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                      p.stock === 0 ? "bg-red-50 text-red-600" :
-                      p.stock <= 10 ? "bg-orange-50 text-orange-600" :
-                      "bg-green-50 text-green-600"
-                    }`}>
-                      {p.stock === 0 ? "Out of stock" : p.stock <= 10 ? `Low (${p.stock})` : p.stock}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3 text-[#717171]">⭐ {p.rating?.toFixed(1)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+          <div className="fixed left-0 top-0 h-full z-50 lg:hidden flex flex-col">
+            <Sidebar />
+          </div>
+        </>
+      )}
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        {/* Top bar */}
+        <header className="bg-white border-b border-[#E8E8E8] px-5 py-4 flex items-center gap-4 shrink-0">
+          <button onClick={() => setSidebarOpen(true)}
+            className="lg:hidden text-[#717171] hover:text-[#1A1A1A] transition-colors">
+            <Menu size={20} />
+          </button>
+          <h2 className="font-bold text-[#1A1A1A] capitalize">
+            {NAV.find((n) => n.id === active)?.label}
+          </h2>
+        </header>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto p-6">
+          {SECTION[active]}
+        </main>
       </div>
     </div>
-  </div>
-);
-
-export default AdminPage;
+  );
+}

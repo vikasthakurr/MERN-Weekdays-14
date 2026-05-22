@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Star, ShoppingBag, Plus, Minus, Heart, ArrowRight, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, increase, decrease, selectCartItem } from "../redux/cartSlice";
 import toast from "react-hot-toast";
 import rawProducts from "../data/products.json";
 
@@ -349,8 +351,8 @@ export const Footer = () => (
 
 // ── Product card ──────────────────────────────────────────────────────────────
 const ProductCard = ({ product, eager = false }) => {
-  const dispatch = () => {};
-  const cartItem = null;
+  const dispatch = useDispatch();
+  const cartItem = useSelector(selectCartItem(product._id));
   const rating = product.rating ?? 0;
   const isOnSale = product.price > 100;
 

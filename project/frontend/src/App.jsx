@@ -12,9 +12,11 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Categories from "./pages/Categories";
 import ProductDetail from "./pages/ProductDetail";
+import AllProducts from "./pages/AllProducts";
 import AdminPage from "./admin/AdminPage";
 
 function App() {
@@ -36,9 +38,11 @@ function App() {
                   <Route path="/signup"               element={<Signup />} />
                   <Route path="/profile"              element={<PrivateRoute><Profile /></PrivateRoute>} />
                   <Route path="/cart"                 element={<PrivateRoute><Cart /></PrivateRoute>} />
+                  <Route path="/checkout"             element={<PrivateRoute><Checkout /></PrivateRoute>} />
                   <Route path="/orders"               element={<PrivateRoute><Orders /></PrivateRoute>} />
                   <Route path="/categories"           element={<Categories />} />
                   <Route path="/categories/:category" element={<Categories />} />
+                  <Route path="/products"             element={<AllProducts />} />
                   <Route path="/product/:id"          element={<ProductDetail />} />
                 </Routes>
               </main>
